@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Teste de Servidor MySQL</title>
+</head>
+<body>
+    <h1>Teste de Servidor MySQL</h1>
+    
+    <form method="POST" action="/">
+        <label for="sqlscript">Script SQL:</label>
+        <br>
+        <textarea id="sqlscript" name="sqlscript" placeholder="Digite um script SQL aqui...">{{ sql_script or 'SELECT VERSION();' }}</textarea>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+        <br>
+    {% endif %}
+
+    {% if results %}
+        <h2>Resultado:</h2>
+        <p>{{ results }}</p>
+    {% endif %}
+</body>
+</html>
