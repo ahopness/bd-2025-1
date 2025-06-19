@@ -4,6 +4,8 @@ app = Flask(__name__)
 import pymysql
 from config import *
 
+from utils import *
+
 @app.get('/')
 def home_get():
     return render_template('index.html')
