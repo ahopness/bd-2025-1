@@ -1,0 +1,79 @@
+body {
+    display: flex;
+	flex-direction: column;
+
+    margin: 0 auto;
+    max-width: 650px;
+    min-height: 100vh;
+
+    background-color: #e3ddd1;
+    background-repeat: repeat;
+	background-attachment: fixed;
+    background-image: url("/static/bg.svg");
+
+    font-family: "Karla", sans-serif;
+	font-size: 12pt;
+    line-height:1.6;
+}
+
+h1,h2,h3{
+    line-height:1.2;
+}
+
+.site-header {
+    padding: 24px;
+    text-align: center;
+}
+
+.site-content {
+    background-color: #f1f0e9;
+    border-radius: 12px;
+
+    flex: 1;
+    margin: 32px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.item-list {
+    /* column-count: 2; */
+    text-align: center;
+    margin: 0 auto;
+}
+
+.campeonato-item {
+    display: inline-block;
+    margin: 5px;
+    padding: 8px;
+
+    width: 260px;
+    height: 110px;
+
+    border: none;
+    text-decoration: none;
+    background-color: #a6884a;
+    color: white;
+    border-radius: 12px;
+    transition-duration: 0.35s;
+    cursor: pointer;
+}
+
+.campeonato-item:hover {
+    background-color: gray;
+}
+
+.campeonato-logo {
+    height: 64px; 
+    padding: 8px;
+    
+    background-color: white;
+    border-radius: 12px;
+}
+
+.campeonato-add {
+    text-align: center;
+    align-content: center;
+
+    background-color: #5f7b53;
+    color: white;
+}

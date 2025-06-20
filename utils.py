@@ -99,7 +99,8 @@ INSERT INTO esportes (nome)
 VALUES
 ('Futebol'), 
 ('Vôlei'), 
-('Tênis de Mesa'), 
+('Tênis'), 
+('Hóquei'), 
 ('Natação'), 
 ('Skate'), 
 ('Surfe'), 
@@ -108,9 +109,13 @@ VALUES
 
 INSERT INTO campeonatos (nome, url_logo, id_esporte, data_inicio, data_fim)
 VALUES
-('Copa do Mundo de Clubes da FIFA',
+('Copa do Mundo de Clubes da FIFA 2025',
 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/2025_FIFA_Club_World_Cup.svg/200px-2025_FIFA_Club_World_Cup.svg.png',
 (SELECT id_esporte FROM esportes WHERE nome = 'Futebol'), '2025-06-14', '2025-07-13');
+
+('Campeonato Mundial de Hóquei no Gelo Ed. 86',
+'https://upload.wikimedia.org/wikipedia/en/thumb/9/96/2025_IIHF_World_Championship_logo.png/250px-2025_IIHF_World_Championship_logo.png',
+(SELECT id_esporte FROM esportes WHERE nome = 'Hóquei'), '2025-05-09', '2025-05-25');
 
 INSERT INTO times (nome, id_campeonato, url_logo)
 VALUES
