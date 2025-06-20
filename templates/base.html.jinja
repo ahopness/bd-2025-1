@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css" />
+    
+    <title>{% block title %}{% endblock %} - CHAMPIGNON</title>
+    <link rel="icon" href="/static/favicon.png" sizes="any">
+</head>
+<body>
+    <div class="site-content">
+        <div class="site-header">
+            <a href="/"><img height="128px" src="/static/icon.svg"/></a>
+            <br>
+            <h1 style="margin-top: 0px;">CHAMPIGNON</h1>
+            {% if usuario %}
+            <button class="alt-button" style="background-color: gray;" id="user_dropdown_button"><img src="/static/user.svg"/>{{ usuario.nome }}</button>
+            <div class="dropdown-content" id="dropdown_usuario">
+                <a href="#" id="sair_conta_button">Sair da conta</a>
+            </div>
+            {% else %}
+            <button class="alt-button user_login_button">
+                <img src="/static/user.svg"/>
+                <span style="margin-left: 4px;">Entar</span>
+            </button>
+            {% endif %}
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block modals %}{% endblock %}
+    <div class="modal" id="login_modal">
+        <div class="modal-content">
+            <table>
+                <tr>
+                    <td><h3>Log-In</h3></td>
+                    <td><button class="close-button close_modals_button"><b>&times;<b></button></td>
+                </tr>
+            </table>
+            <form>
+                <label for="email">E-Mail:</label><br>
+                <input type="email" id="email" name="email" maxlength="255" autofocus><br>
+                <label for="senha">Senha:</label><br>
+                <input type="password" id="senha" name="senha" maxlength="255">
+            </form>
+            <br><br>
+            <button class="button" id="action_login_button">Entrar</button>
+            <span style="width: 4px;display: inline-block;"></span>
+            <button class="button user_signin_button">Primeira vez aqui?</button>
+        </div>
+    </div>
+    <div class="modal" id="signin_modal">
+        <div class="modal-content">
+            <table>
+                <tr>
+                    <td><h3>Sign-In</h3></td>
+                    <td><button class="close-button close_modals_button"><b>&times;</b></button></td>
+                </tr>
+            </table>
+            <form>
+                <label for="nome">Nome/Apelido:</label><br>
+                <input type="text" id="nome" name="nome" maxlength="255" autofocus><br>
+                <label for="email">E-Mail:</label><br>
+                <input type="email" id="email" name="email" maxlength="255"><br>
+                <label for="senha">Senha:</label><br>
+                <input type="password" id="senha" name="senha" maxlength="255">
+            </form>
+            <br><br>
+            <button class="button" id="action_signin_button">Cadastrar</button>
+            <span style="width: 8px;display: inline-block;"></span>
+            <button class="button user_login_button">Já possui cadastro?</button>
+        </div>
+    </div>
+    
+    {% block script %}{% endblock %}
+    <script>
+
+        {% if usuario %}
+        var button_sair_conta = document.getElementById("sair_conta_button");
+        button_sair_conta.onclick = function() {
+            fetch('/logout', {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                alert('Erro ao fazer logout: ' + error);
+            });
+        }
+        
+        var button_user_dropdown = document.getElementById("user_dropdown_button");
+        button_user_dropdown.onclick = function() {
+            var dropdown_usuario = document.getElementById("dropdown_usuario");
+            if (dropdown_usuario.style.display == "block") {
+                dropdown_usuario.style.display = "none";
+            } else {
+                dropdown_usuario.style.display = "block";
+            }
+        }
+        {% else %}
+        var modal_login = document.getElementById("login_modal");
+        var modal_signin = document.getElementById("signin_modal");
+        
+        var button_user_login = document.getElementsByClassName("user_login_button");
+        for (var i = 0; i < button_user_login.length; i++) {
+            button_user_login[i].onclick = function() {
+                modal_login.style.display = "block";
+                modal_signin.style.display = "none";
+            }
+        }
+        
+        var button_user_signin = document.getElementsByClassName("user_signin_button");
+        for (var i = 0; i < button_user_signin.length; i++) {
+            button_user_signin[i].onclick = function() {
+                modal_login.style.display = "none";
+                modal_signin.style.display = "block";
+            }
+        }
+        
+        var button_modals_close = document.getElementsByClassName("close_modals_button");
+        for (var i = 0; i < button_modals_close.length; i++) {
+            button_modals_close[i].onclick = function() {
+                modal_login.style.display = "none";
+                modal_signin.style.display = "none";
+            }
+        }
+
+        var button_action_login = document.getElementById("action_login_button");
+        button_action_login.onclick = function() {
+            var email = document.querySelector('#login_modal input[name="email"]').value;
+            var senha = document.querySelector('#login_modal input[name="senha"]').value;
+            
+            var formData = new FormData();
+            formData.append('email', email);
+            formData.append('senha', senha);
+            
+            fetch('/login', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro de conexão: ' + error);
+            });
+        }
+        
+        var button_action_signin = document.getElementById("action_signin_button");
+        button_action_signin.onclick = function() {
+            var nome = document.querySelector('#signin_modal input[name="nome"]').value;
+            var email = document.querySelector('#signin_modal input[name="email"]').value;
+            var senha = document.querySelector('#signin_modal input[name="senha"]').value;
+            
+            var formData = new FormData();
+            formData.append('nome', nome);
+            formData.append('email', email);
+            formData.append('senha', senha);
+            
+            fetch('/signin', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro de conexão: ' + error);
+            });
+        }
+        {% endif %}
+    </script>
+</body>
+</html>

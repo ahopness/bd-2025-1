@@ -1,84 +1,80 @@
-from flask import Flask, render_template, request
-from markupsafe import escape
+from flask import Flask, render_template, session
 app = Flask(__name__)
+app.secret_key = 'segredo'
 
 import pymysql
 from config import *
-
 from utils import *
+
+from account import *
+from championship import *
 
 @app.get('/')
 def home_get():
     try:
-        connection = pymysql.connect(**DB_CONFIG)
+        home_connection = pymysql.connect(**DB_CONFIG)
     except Exception as e:
-        return "Service Unavailable: {str(e)}", 503 # Service Unavailable
+        return "Service Unavailable: {str(e)}", 503
 
     try:
-        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        with home_connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute("""
                 SELECT
                     id_campeonato,
                     nome,
                     url_logo,
                     CASE
-                        WHEN data_inicio > CURDATE() THEN 'Não iniciou'
+                        WHEN data_inicio > CURDATE() THEN 'Em breve'
                         WHEN data_fim < CURDATE() THEN 'Terminou'
                         ELSE 'Em andamento'
                     END AS andamento
-                FROM
-                    campeonatos
+                FROM campeonatos
             """)
             campeonatos = cursor.fetchall()
 
-        return render_template('home.html', campeonatos=campeonatos)
-    except Exception as e:
-        connection.rollback()
-        return f"Internal Server Error: {str(e)}", 500 # Internal Server Error
-    finally:
-        if connection.open:
-            connection.close()
+            cursor.execute("""
+                SELECT nome
+                FROM esportes
+            """)
+            esportes = cursor.fetchall()
 
+            usuario = None
+            if 'user_id' in session:
+                cursor.execute(f"""
+                    SELECT id_usuario, nome, email 
+                    FROM usuarios 
+                    WHERE id_usuario = '{session['user_id']}';
+                """)
+                usuario = cursor.fetchone()
+
+        return render_template('home.html.jinja', campeonatos=campeonatos, usuario=usuario, esportes=esportes)
+    except Exception as e:
+        home_connection.rollback()
+        return f"Internal Server Error: {str(e)}", 500
+    finally:
+        if home_connection.open:
+            home_connection.close()
 
 @app.get('/campeonato/<nome>')
 def dashboard_get(nome):
-    return render_template('dashboard.html',
-                            titulo=nome)
-
-# @app.post('/')
-# def home_post():
-#     sql_script = request.form.get('sqlscript', '')
-#     if not sql_script:
-#         return render_template('index.html', 
-#                              error="você não inseriu nada!",
-#                              sql_script=sql_script)
+    usuario = None
+    if 'user_id' in session:
+        try:
+            dashboard_connection = pymysql.connect(**DB_CONFIG)
+            with dashboard_connection.cursor(pymysql.cursors.DictCursor) as cursor:
+                cursor.execute(f"""
+                    SELECT id_usuario, nome, email 
+                    FROM usuarios 
+                    WHERE id_usuario = '{session['user_id']}';
+                """)
+                usuario = cursor.fetchone()
+        except:
+            pass
+        finally:
+            if dashboard_connection.open:
+                dashboard_connection.close()
     
-#     try:
-#         connection = pymysql.connect(**DB_CONFIG)
-#     except Exception as e:
-#         return render_template('index.html', 
-#                              error=f"Erro ao conectar com o banco de dados:\n{e}",
-#                              sql_script=sql_script)
-    
-#     try:
-#         with connection.cursor() as cursor:
-#             cursor.execute(sql_script)
-            
-#             results = cursor.fetchall()
-#             connection.commit()
-#             affected_rows = cursor.rowcount
-#             return render_template('index.html', 
-#                                     results=str(results) + 
-#                                     f" Query executado com sucesso. {affected_rows} entidade(s) afetadas.",
-#                                     sql_script=sql_script)
-                                     
-#     except Exception as e:
-#         connection.rollback()
-#         return render_template('index.html', 
-#                              error=f"SQL Error: {str(e)}",
-#                              sql_script=sql_script)
-#     finally:
-#         connection.close()
+    return render_template('dashboard.html.jinja', titulo=nome, usuario=usuario)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

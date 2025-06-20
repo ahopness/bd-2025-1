@@ -39,6 +39,14 @@ def setup_db():
             connection.close()
 
 query_create = """
+CREATE TABLE IF NOT EXISTS usuarios (
+    id_usuario INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id_usuario)
+);
+
 CREATE TABLE IF NOT EXISTS esportes (
     id_esporte INT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(255) NOT NULL UNIQUE,
@@ -47,6 +55,7 @@ CREATE TABLE IF NOT EXISTS esportes (
 
 CREATE TABLE IF NOT EXISTS campeonatos (
     id_campeonato INT NOT NULL AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
     nome VARCHAR(255) NOT NULL UNIQUE,
     url_logo VARCHAR(255) NULL,
     id_esporte INT NOT NULL,
@@ -56,6 +65,10 @@ CREATE TABLE IF NOT EXISTS campeonatos (
     FOREIGN KEY (id_esporte) 
         REFERENCES esportes(id_esporte) 
         ON DELETE RESTRICT 
+        ON UPDATE CASCADE,
+    FOREIGN KEY (id_usuario) 
+        REFERENCES usuarios(id_usuario) 
+        ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
 
@@ -95,6 +108,13 @@ CREATE TABLE IF NOT EXISTS partidas (
         ON UPDATE CASCADE
 );
 
+
+INSERT INTO usuarios (nome, email, senha)
+VALUES
+('Fulano de Tal', 'fulano@email.com', 'senha'),
+('Sicrano de Tal', 'Sicrano@email.com', 'senha'),
+('Beltrano de Tal', 'Beltrano@email.com', 'senha');
+
 INSERT INTO esportes (nome)
 VALUES
 ('Futebol'), 
@@ -107,44 +127,44 @@ VALUES
 ('Judô'), 
 ('Capoeira');
 
-INSERT INTO campeonatos (nome, url_logo, id_esporte, data_inicio, data_fim)
+INSERT INTO campeonatos (nome, id_usuario, url_logo, id_esporte, data_inicio, data_fim)
 VALUES
-('Copa do Mundo de Clubes da FIFA 2025',
+('Copa do Mundo de Clubes da FIFA 2025', (SELECT id_usuario FROM usuarios WHERE nome = 'Fulano de Tal'),
 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/2025_FIFA_Club_World_Cup.svg/200px-2025_FIFA_Club_World_Cup.svg.png',
-(SELECT id_esporte FROM esportes WHERE nome = 'Futebol'), '2025-06-14', '2025-07-13');
+(SELECT id_esporte FROM esportes WHERE nome = 'Futebol'), '2025-06-14', '2025-07-13'),
 
-('Campeonato Mundial de Hóquei no Gelo Ed. 86',
+('Campeonato Mundial de Hóquei no Gelo Ed. 86', (SELECT id_usuario FROM usuarios WHERE nome = 'Sicrano de Tal'),
 'https://upload.wikimedia.org/wikipedia/en/thumb/9/96/2025_IIHF_World_Championship_logo.png/250px-2025_IIHF_World_Championship_logo.png',
 (SELECT id_esporte FROM esportes WHERE nome = 'Hóquei'), '2025-05-09', '2025-05-25');
 
 INSERT INTO times (nome, id_campeonato, url_logo)
 VALUES
-('Sociedade Esportiva Palmeiras', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'),
+('Sociedade Esportiva Palmeiras', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'),
 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Palmeiras_logo.svg/250px-Palmeiras_logo.svg.png'),
-('Futebol Clube do Porto', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'),
+('Futebol Clube do Porto', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'),
 'https://upload.wikimedia.org/wikipedia/pt/thumb/c/c5/F.C._Porto_logo.png/120px-F.C._Porto_logo.png'),
-('Botafogo de Futebol e Regatas', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'),
+('Botafogo de Futebol e Regatas', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'),
 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Botafogo_de_Futebol_e_Regatas_logo.svg/250px-Botafogo_de_Futebol_e_Regatas_logo.svg.png'),
-('Seattle Sounders Football Club', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'),
+('Seattle Sounders Football Club', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'),
 'https://upload.wikimedia.org/wikipedia/pt/thumb/7/7c/Seattle_Sounders_FC.png/250px-Seattle_Sounders_FC.png'),
-('Clube de Regatas do Flamengo', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'),
+('Clube de Regatas do Flamengo', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'),
 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flamengo_braz_logo.svg/250px-Flamengo_braz_logo.svg.png'),
-('Espérance Sportive de Tunis', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'),
+('Espérance Sportive de Tunis', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'),
 'https://upload.wikimedia.org/wikipedia/pt/thumb/4/49/Esp%C3%A9rance_Sportive_de_Tunis.png/250px-Esp%C3%A9rance_Sportive_de_Tunis.png');
 
 INSERT INTO partidas (id_campeonato, rodada, data_hora, id_time_a, id_time_b, placar_time_a, placar_time_b)
 VALUES
-((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'), 
+((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'), 
 '1', '2025-06-15 19:00:00', 
 (SELECT id_time FROM times WHERE nome = 'Sociedade Esportiva Palmeiras'), (SELECT id_time FROM times WHERE nome = 'Futebol Clube do Porto'), 
 '0', '0'),
 
-((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'), 
+((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'), 
 '1', '2025-06-15 23:00:00', 
 (SELECT id_time FROM times WHERE nome = 'Botafogo de Futebol e Regatas'), (SELECT id_time FROM times WHERE nome = 'Seattle Sounders Football Club'), 
 '2', '1'),
 
-((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA'), 
+((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'), 
 '2', '2025-06-16 22:00:00', 
 (SELECT id_time FROM times WHERE nome = 'Clube de Regatas do Flamengo'), (SELECT id_time FROM times WHERE nome = 'Espérance Sportive de Tunis'), 
 '2', '0');

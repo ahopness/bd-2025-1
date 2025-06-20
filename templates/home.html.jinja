@@ -1,0 +1,107 @@
+{% extends "base.html.jinja" %}
+{% block title %}Início{% endblock %}
+{% block content %}
+<h2>Campeonatos</h2>
+<div class="item-list">
+    {%for campeonato in campeonatos %}
+    <button class="campeonato-item">
+        <table>
+            <tr>
+                <td>
+                    <img class="campeonato-logo" src="{{ campeonato.url_logo }}"/>
+                </td>
+                <td>
+                    <p style="margin: 4px;"><b>{{ campeonato.nome }}</b></p>
+                    <p style="margin: 4px; font-size: 10pt;">{{ campeonato.andamento }}</p>
+                </td>
+            </tr>
+        </table>
+    </button>
+    {% endfor %}
+    {% if usuario %}
+    <button class="campeonato-item campeonato-add" id="add_campeonato_modal_button">
+        <p style="margin: 4px;"><b>Criar novo campeonato.</b></p>
+        <p style="margin: 4px;"><img src="/static/add.svg"/></p>
+    </button>
+    {% endif %}
+</div>
+{% endblock %}
+{% block modals %}
+<div class="modal" id="criar_campeonato_modal">
+    <div class="modal-content">
+        <table>
+            <tr>
+                <td><h3>Criar Novo Campeonato</h3></td>
+                <td><button class="close-button" id="close_add_campeonato_modal_button"><b>&times;<b></button></td>
+            </tr>
+        </table>
+        <form>
+            <label for="nome">Nome Oficial:</label><br>
+            <input type="text" id="nome" name="nome" maxlength="255" autofocus><br>
+            <label for="url_logo">Logo (URL):</label><br>
+            <input type="url" id="url_logo" name="url_logo" maxlength="255"><br>
+            <label for="esporte">Esporte:</label><br>
+            <select id="esporte" name="esporte">
+                {% for esporte in esportes %}
+                <option value="{{ esporte.nome }}">{{ esporte.nome }}</option>
+                {% endfor %}
+            </select><br>
+            <label for="data_inicio">Data de Iníco:</label><br>
+            <input type="date" id="data_inicio" name="data_inicio"><br>
+            <label for="data_fim">Data de Fim:</label><br>
+            <input type="date" id="data_fim" name="data_fim"><br>
+        </form>
+        <br><br>
+        <button class="button" id="criar_campeonato_button">Proceder</button>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    {% if usuario %}
+    var modal_campeonato_criar = document.getElementById("criar_campeonato_modal");
+    
+    var button_add_campeonato_model = document.getElementById("add_campeonato_modal_button");
+    button_add_campeonato_model.onclick = function() {
+        modal_campeonato_criar.style.display = "block";
+    }
+    
+    var button_campeonato_criar_model_close = document.getElementById("close_add_campeonato_modal_button");
+    button_campeonato_criar_model_close.onclick = function() {
+        modal_campeonato_criar.style.display = "none";
+    }
+
+    var button_criar_campeonato = document.getElementById("criar_campeonato_button");
+    button_criar_campeonato.onclick = function() {
+        var nome = document.querySelector('#criar_campeonato_modal input[name="nome"]').value;
+        var url_logo = document.querySelector('#criar_campeonato_modal input[name="url_logo"]').value;
+        var esporte = document.querySelector('#criar_campeonato_modal select[name="esporte"]').value;
+        var data_inicio = document.querySelector('#criar_campeonato_modal input[name="data_inicio"]').value;
+        var data_fim = document.querySelector('#criar_campeonato_modal input[name="data_fim"]').value;
+
+        var formData = new FormData();
+        formData.append('nome', nome);
+        formData.append('url_logo', url_logo);
+        formData.append('esporte', esporte);
+        formData.append('data_inicio', data_inicio);
+        formData.append('data_fim', data_fim);
+
+        fetch('/criar_campeonato', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error);
+        });
+    }
+    {% endif %}
+</script>
+{% endblock %}

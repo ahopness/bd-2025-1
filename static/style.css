@@ -1,3 +1,17 @@
+:root {
+    --context-color:  #f1f0e9;
+    --background-color: #e3ddd1;
+    --button-color: #a6884a;
+    --alt-button-color: #5f7b53;
+    --hover-button-color: gray;
+    
+    --corner-radius: 12px;
+    --default-padding: 12px;
+    --button-padding: 8px;
+
+    --anim-time: 0.2s;
+}
+
 body {
     display: flex;
 	flex-direction: column;
@@ -6,7 +20,7 @@ body {
     max-width: 650px;
     min-height: 100vh;
 
-    background-color: #e3ddd1;
+    background-color: var(--background-color);
     background-repeat: repeat;
 	background-attachment: fixed;
     background-image: url("/static/bg.svg");
@@ -20,23 +34,165 @@ h1,h2,h3{
     line-height:1.2;
 }
 
+table {
+    width: 100%;
+}
+
+input {
+    width: 85%;
+    margin-left: 12px;
+}
+input[type=text], 
+input[type=email], 
+input[type=password], 
+input[type=url] 
+input[type=date] {
+    background-color: var(--background-color);
+    border: none;
+    border-radius: 8px;
+    height: 24px;
+}
+
 .site-header {
     padding: 24px;
     text-align: center;
 }
-
 .site-content {
-    background-color: #f1f0e9;
-    border-radius: 12px;
+    background-color: var(--context-color);
+    border-radius: var(--corner-radius);
+    border-style: solid;
 
     flex: 1;
     margin: 32px;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: var(--default-padding);
+    padding-right: var(--default-padding);
+    padding-bottom: 24px;
+}
+
+.dropdown-content {
+    display: none;
+    margin-top: var(--default-padding);
+
+    background-color: var(--background-color);
+    border-radius: var(--corner-radius);
+    border-style: solid;
+    border-color: black;
+    border-width: 3px;
+
+    min-width: 160px;
+    z-index: 1;
+}
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown a:hover {
+    background-color: var(--hover-button-color);
+}
+
+.modal {
+    display: none;
+
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: var(--context-color);
+    border-radius: var(--corner-radius);
+    border-style: solid;
+    border-width: 3px;
+
+    padding: var(--default-padding);
+    
+    width: 400px;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.button {
+    padding: var(--button-padding);
+
+    color: white;
+    background-color: var(--button-color);
+    transition-duration: var(--anim-time);
+
+    text-decoration: none;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+
+    border-style: solid;
+    border-color: black;
+    border-width: 3px;
+    border-radius: var(--corner-radius);
+}
+.button:hover {
+    background-color: var(--hover-button-color);
+}
+
+.alt-button {
+    padding: var(--button-padding);
+
+    color: white;
+    background-color: var(--alt-button-color);
+    transition-duration: var(--anim-time);
+
+    text-decoration: none;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+
+    border-style: solid;
+    border-color: black;
+    border-width: 3px;
+    border-radius: var(--corner-radius);
+}
+.alt-button:hover {
+    background-color: var(--hover-button-color);
+}
+
+.close-button {
+    float: right;
+    padding: var(--button-padding);
+    width: 44px;
+    height: 44px;
+
+    color: red;
+    background-color: var(--background-color);
+    transition-duration: var(--anim-time);
+
+    font-size: 14pt;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+
+    border-style: solid;
+    border-color: black;
+    border-width: 3px;
+    border-radius: var(--corner-radius);
+}
+.close-button:hover {
+    color : black;
 }
 
 .item-list {
-    /* column-count: 2; */
+    column-count: 2;
     text-align: center;
     margin: 0 auto;
 }
@@ -49,17 +205,20 @@ h1,h2,h3{
     width: 260px;
     height: 110px;
 
-    border: none;
-    text-decoration: none;
-    background-color: #a6884a;
-    color: white;
-    border-radius: 12px;
-    transition-duration: 0.35s;
-    cursor: pointer;
-}
+    border-style: solid;
+    border-color: black;
+    border-width: 3px;
+    border-radius: var(--corner-radius);
 
+    text-decoration: none;
+    cursor: pointer;
+    
+    background-color: var(--button-color);
+    color: white;
+    transition-duration: var(--anim-time);
+}
 .campeonato-item:hover {
-    background-color: gray;
+    background-color: var(--hover-button-color);
 }
 
 .campeonato-logo {
@@ -67,13 +226,13 @@ h1,h2,h3{
     padding: 8px;
     
     background-color: white;
-    border-radius: 12px;
+    border-radius: var(--corner-radius);
 }
 
 .campeonato-add {
     text-align: center;
     align-content: center;
 
-    background-color: #5f7b53;
+    background-color: var(--alt-button-color);
     color: white;
 }
