@@ -3,8 +3,8 @@
 {% block content %}
 <h2>Campeonatos</h2>
 <div class="item-list">
-    {%for campeonato in campeonatos %}
-    <button class="campeonato-item">
+    {% for campeonato in campeonatos %}
+    <button class="campeonato-item" id="{{ campeonato.id_campeonato }}">
         <table>
             <tr>
                 <td>
@@ -19,7 +19,7 @@
     </button>
     {% endfor %}
     {% if usuario %}
-    <button class="campeonato-item campeonato-add" id="add_campeonato_modal_button">
+    <button class="campeonato-item add-button" id="add_campeonato_modal_button">
         <p style="margin: 4px;"><b>Criar novo campeonato.</b></p>
         <p style="margin: 4px;"><img src="/static/add.svg"/></p>
     </button>
@@ -60,7 +60,16 @@
 {% endblock %}
 {% block script %}
 <script>
+    // BOTÕES DE CAMPEONATOS
+    {% for campeonato in campeonatos %}
+    var button_{{ campeonato.id_campeonato }} = document.getElementById("{{ campeonato.id_campeonato }}");
+    button_{{ campeonato.id_campeonato }}.onclick = function() {
+        window.location.replace("/campeonato?id={{ campeonato.id_campeonato }}");
+    }
+
+    {% endfor %}
     {% if usuario %}
+    // CAMPEONATO MODAL
     var modal_campeonato_criar = document.getElementById("criar_campeonato_modal");
     
     var button_add_campeonato_model = document.getElementById("add_campeonato_modal_button");
@@ -90,7 +99,7 @@
         formData.append('data_inicio', data_inicio);
         formData.append('data_fim', data_fim);
 
-        fetch('/criar_campeonato', {
+        fetch('/campeonato_criar', {
             method: 'POST',
             body: formData
         })

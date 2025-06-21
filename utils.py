@@ -12,6 +12,7 @@ def setup_db():
 
         connection = pymysql.connect(**DB_CONFIG_COPY)
         with connection.cursor() as cursor:
+            cursor.execute(f"DROP DATABASE IF EXISTS `{db_name}`")
             cursor.execute(f"CREATE DATABASE IF NOT EXISTS `{db_name}`")
         connection.close()
 
@@ -131,12 +132,12 @@ VALUES
 INSERT INTO campeonatos (nome, id_usuario, descricao, url_logo, id_esporte, data_inicio, data_fim)
 VALUES
 ('Copa do Mundo de Clubes da FIFA 2025', (SELECT id_usuario FROM usuarios WHERE nome = 'Fulano de Tal'),
-'um torneio quadrienal internacional de futebol organizado pela Federação Internacional de Futebol (FIFA), disputado por 32 clubes das seis confederações continentais.',
+'Um torneio quadrienal internacional de futebol organizado pela Federação Internacional de Futebol (FIFA), disputado por 32 clubes das seis confederações continentais.',
 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/2025_FIFA_Club_World_Cup.svg/200px-2025_FIFA_Club_World_Cup.svg.png',
 (SELECT id_esporte FROM esportes WHERE nome = 'Futebol'), '2025-06-14', '2025-07-13'),
 
 ('Campeonato Mundial de Hóquei no Gelo Ed. 86', (SELECT id_usuario FROM usuarios WHERE nome = 'Sicrano de Tal'),
-'torneio anual disputado pelas melhores seleções de hóquei no gelo. O torneio é organizado pela Federação Internacional de Hóquei no Gelo.',
+'Torneio anual disputado pelas melhores seleções de hóquei no gelo. O torneio é organizado pela Federação Internacional de Hóquei no Gelo.',
 'https://upload.wikimedia.org/wikipedia/en/thumb/9/96/2025_IIHF_World_Championship_logo.png/250px-2025_IIHF_World_Championship_logo.png',
 (SELECT id_esporte FROM esportes WHERE nome = 'Hóquei'), '2025-05-09', '2025-05-25');
 

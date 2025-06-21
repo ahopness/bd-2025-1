@@ -1,12 +1,13 @@
 from flask import request, session, jsonify
+from markupsafe import escape
 
 from app import app
 
 import pymysql
 from config import *
 
-@app.post('/criar_campeonato')
-def criar_campeonato():
+@app.post('/campeonato_criar')
+def campeonato_criar_post():
     nome = request.form.get('nome')
     descricao = request.form.get('descricao')
     url_logo = request.form.get('url_logo')
@@ -27,8 +28,16 @@ def criar_campeonato():
                 return jsonify({'success': False, 'message': 'Ja tem um campeonato com este nome'})
             
             cursor.execute(f"""
-                INSERT INTO campeonatos (id_usuario, nome, descricao, url_logo, id_esporte, data_inicio, data_fim) 
-                VALUES ('{session['user_id']}', '{nome}', '{descricao}', '{url_logo}', (SELECT id_esporte FROM esportes WHERE nome = '{esporte}'), '{data_inicio}', '{data_fim}');
+                INSERT INTO 
+                    campeonatos (id_usuario, nome, descricao, url_logo, id_esporte, data_inicio, data_fim) 
+                VALUES 
+                    ('{escape(session['user_id'])}', 
+                    '{escape(nome)}', 
+                    '{escape(descricao)}', 
+                    '{escape(url_logo)}', 
+                    (SELECT id_esporte FROM esportes WHERE nome = '{escape(esporte)}'), 
+                    '{escape(data_inicio)}', 
+                    '{escape(data_fim)}');
             """)
             criar_campeonato_connection.commit()
             

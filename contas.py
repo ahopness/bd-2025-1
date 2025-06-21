@@ -1,4 +1,5 @@
 from flask import request, session, redirect, url_for, jsonify
+from markupsafe import escape
 
 from app import app
 
@@ -19,7 +20,7 @@ def conta_entrar_post():
             cursor.execute(f"""
                 SELECT id_usuario, nome, email, senha 
                 FROM usuarios 
-                WHERE email = '{email}';
+                WHERE email = '{escape(email)}';
             """)
             usuario = cursor.fetchone()
             
@@ -50,14 +51,16 @@ def conta_cadastrar_post():
         conta_cadastrar_connection = pymysql.connect(**DB_CONFIG)
         with conta_cadastrar_connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(f"""
-                SELECT id_usuario FROM usuarios WHERE email = '{email}';
+                SELECT id_usuario 
+                FROM usuarios 
+                WHERE email = '{escape(email)}';
             """)
             if cursor.fetchone():
                 return jsonify({'success': False, 'message': 'Este email já está cadastrado'})
             
             cursor.execute(f"""
                 INSERT INTO usuarios (nome, email, senha) 
-                VALUES ('{nome}', '{email}', '{senha}');
+                VALUES ('{escape(nome)}', '{escape(email)}', '{escape(senha)}');
             """)
             conta_cadastrar_connection.commit()
             
@@ -86,10 +89,10 @@ def conta_deletar_post():
         with conta_deletar_connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(f"""
                 DELETE FROM usuarios 
-                WHERE id_usuario = '{session['user_id']}';
+                WHERE id_usuario = '{escape(session['user_id'])}';
             """)
             conta_deletar_connection.commit()
-            
+
             session.clear()
 
             return jsonify({'success': True, 'message': 'Conta deletada com sucesso'})

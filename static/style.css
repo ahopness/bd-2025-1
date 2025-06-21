@@ -36,6 +36,17 @@ h1,h2,h3{
     line-height:1.2;
 }
 
+a, a:link, a:visited {
+	color: var(--button-color);
+	text-decoration: none;
+}
+a:hover, a:active {
+	text-decoration: underline;
+}
+.special-text {
+    color: var(--button-color);
+}
+
 table {
     width: 100%;
 }
@@ -219,8 +230,7 @@ select:focus {
 }
 
 .campeonato-item {
-    display: inline-block;
-    margin: 5px;
+    margin: 6px;
     padding: 8px;
 
     width: 260px;
@@ -247,10 +257,66 @@ select:focus {
     padding: 8px;
     
     background-color: white;
+    
+    border-style: solid;
+    border-color: var(--border-color);
+    border-width: var(--border-width);
+    border-radius: var(--corner-radius);
+}
+.campeonato-logo-grande {
+    height: 128px;
+
+    padding: 8px;
+    
+    background-color: white;
+    
+    border-style: solid;
+    border-color: var(--border-color);
+    border-width: var(--border-width);
     border-radius: var(--corner-radius);
 }
 
-.campeonato-add {
+.time-item {
+    margin-bottom: 12px;
+    padding: 8px;
+    height: 120px;
+
+    background-color: var(--hover-button-color);
+    color: white;
+
+    border-style: solid;
+    border-color: var(--border-color);
+    border-width: var(--border-width);
+    border-radius: var(--corner-radius);
+}
+
+.partida-item {
+    height: 100px;
+    width: 100%;
+
+    margin-top: var(--default-padding);
+    margin-bottom: var(--default-padding);
+    padding: 8px;
+
+    border-style: solid;
+    border-color: var(--border-color);
+    border-width: var(--border-width);
+    border-radius: var(--corner-radius);
+
+    background-color: var(--button-color);
+    color: white;
+}
+
+.dashboard-button {
+    text-decoration: none;
+    cursor: pointer;
+    transition-duration: var(--anim-time);
+}
+.dashboard-button:hover {
+    background-color: var(--hover-button-color);
+}
+
+.add-button {
     text-align: center;
     align-content: center;
 
