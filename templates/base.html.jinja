@@ -20,7 +20,10 @@
             <br>
             <h1 style="margin-top: 0px;">CHAMPIGNON</h1>
             {% if usuario %}
-            <button class="alt-button" style="background-color: gray;" id="user_dropdown_button"><img src="/static/user.svg"/>{{ usuario.nome }}</button>
+            <button class="alt-button" style="background-color: gray;" id="user_dropdown_button">
+                <img src="/static/user.svg"/>
+                <span style="margin-left: 4px;">{{ usuario.nome }}</span>
+            </button>
             <div class="dropdown-content" id="dropdown_usuario">
                 <a href="#" id="sair_conta_button">Sair da conta</a>
                  <a href="#" id="deletar_conta_button" style="color: red;">Deletar conta</a>
