@@ -5,8 +5,8 @@ from app import app
 import pymysql
 from config import *
 
-@app.post('/login')
-def login_post():
+@app.post('/conta_entrar')
+def conta_entrar_post():
     email = request.form.get('email')
     senha = request.form.get('senha')
     
@@ -14,8 +14,8 @@ def login_post():
         return jsonify({'success': False, 'message': 'Email e senha são obrigatórios'})
     
     try:
-        login_connection = pymysql.connect(**DB_CONFIG)
-        with login_connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        conta_entrar_connection = pymysql.connect(**DB_CONFIG)
+        with conta_entrar_connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(f"""
                 SELECT id_usuario, nome, email, senha 
                 FROM usuarios 
@@ -34,11 +34,11 @@ def login_post():
     except Exception as e:
         return jsonify({'success': False, 'message': f'Erro interno: {str(e)}'})
     finally:
-        if login_connection.open:
-            login_connection.close()
+        if conta_entrar_connection.open:
+            conta_entrar_connection.close()
 
-@app.post('/signin')
-def signin_post():
+@app.post('/conta_cadastrar')
+def conta_cadastrar_post():
     nome = request.form.get('nome')
     email = request.form.get('email')
     senha = request.form.get('senha')
@@ -47,8 +47,8 @@ def signin_post():
         return jsonify({'success': False, 'message': 'Todos os campos são obrigatórios'})
     
     try:
-        signin_connection = pymysql.connect(**DB_CONFIG)
-        with signin_connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        conta_cadastrar_connection = pymysql.connect(**DB_CONFIG)
+        with conta_cadastrar_connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(f"""
                 SELECT id_usuario FROM usuarios WHERE email = '{email}';
             """)
@@ -59,7 +59,7 @@ def signin_post():
                 INSERT INTO usuarios (nome, email, senha) 
                 VALUES ('{nome}', '{email}', '{senha}');
             """)
-            signin_connection.commit()
+            conta_cadastrar_connection.commit()
             
             session['user_id'] = cursor.lastrowid
             session['user_name'] = nome
@@ -68,13 +68,34 @@ def signin_post():
             return jsonify({'success': True, 'message': 'Cadastro realizado com sucesso'})
             
     except Exception as e:
-        signin_connection.rollback()
+        conta_cadastrar_connection.rollback()
         return jsonify({'success': False, 'message': f'Erro interno: {str(e)}'})
     finally:
-        if signin_connection.open:
-            signin_connection.close()
+        if conta_cadastrar_connection.open:
+            conta_cadastrar_connection.close()
 
-@app.post('/logout')
-def logout_post():
+@app.post('/conta_sair')
+def conta_sair_post():
     session.clear()
     return redirect(url_for('home_get'))
+
+@app.post('/conta_deletar')
+def conta_deletar_post():
+    try:
+        conta_deletar_connection = pymysql.connect(**DB_CONFIG)
+        with conta_deletar_connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            cursor.execute(f"""
+                DELETE FROM usuarios 
+                WHERE id_usuario = '{session['user_id']}';
+            """)
+            conta_deletar_connection.commit()
+            
+            session.clear()
+
+            return jsonify({'success': True, 'message': 'Conta deletada com sucesso'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Erro interno: {str(e)}'})
+    finally:
+        if conta_deletar_connection.open:
+            conta_deletar_connection.close()

@@ -36,20 +36,22 @@
             </tr>
         </table>
         <form>
-            <label for="nome">Nome Oficial:</label><br>
-            <input type="text" id="nome" name="nome" maxlength="255" autofocus><br>
-            <label for="url_logo">Logo (URL):</label><br>
-            <input type="url" id="url_logo" name="url_logo" maxlength="255"><br>
-            <label for="esporte">Esporte:</label><br>
+            <label for="nome">Nome Oficial:</label>
+            <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
+            <label for="descricao">Descrição e Regras:</label>
+            <textarea id="descricao" name="descricao" maxlength="500" style="height:70px;"></textarea>
+            <label for="url_logo">Logo (URL):</label>
+            <input type="url" id="url_logo" name="url_logo" maxlength="255">
+            <label for="esporte">Esporte:</label>
             <select id="esporte" name="esporte">
                 {% for esporte in esportes %}
                 <option value="{{ esporte.nome }}">{{ esporte.nome }}</option>
                 {% endfor %}
-            </select><br>
-            <label for="data_inicio">Data de Iníco:</label><br>
-            <input type="date" id="data_inicio" name="data_inicio"><br>
-            <label for="data_fim">Data de Fim:</label><br>
-            <input type="date" id="data_fim" name="data_fim"><br>
+            </select>
+            <label for="data_inicio">Data de Iníco:</label>
+            <input type="date" id="data_inicio" name="data_inicio" required>
+            <label for="data_fim">Data de Fim:</label>
+            <input type="date" id="data_fim" name="data_fim" required>
         </form>
         <br><br>
         <button class="button" id="criar_campeonato_button">Proceder</button>
@@ -74,6 +76,7 @@
     var button_criar_campeonato = document.getElementById("criar_campeonato_button");
     button_criar_campeonato.onclick = function() {
         var nome = document.querySelector('#criar_campeonato_modal input[name="nome"]').value;
+        var descricao = document.querySelector('#criar_campeonato_modal textarea[name="descricao"]').value;
         var url_logo = document.querySelector('#criar_campeonato_modal input[name="url_logo"]').value;
         var esporte = document.querySelector('#criar_campeonato_modal select[name="esporte"]').value;
         var data_inicio = document.querySelector('#criar_campeonato_modal input[name="data_inicio"]').value;
@@ -81,6 +84,7 @@
 
         var formData = new FormData();
         formData.append('nome', nome);
+        formData.append('descricao', descricao);
         formData.append('url_logo', url_logo);
         formData.append('esporte', esporte);
         formData.append('data_inicio', data_inicio);

@@ -8,12 +8,13 @@ from config import *
 @app.post('/criar_campeonato')
 def criar_campeonato():
     nome = request.form.get('nome')
+    descricao = request.form.get('descricao')
     url_logo = request.form.get('url_logo')
     esporte = request.form.get('esporte')
     data_inicio = request.form.get('data_inicio')
     data_fim = request.form.get('data_fim')
     
-    if not nome or not url_logo or not esporte or not data_inicio or not data_fim:
+    if not nome or not descricao or not url_logo or not esporte or not data_inicio or not data_fim:
         return jsonify({'success': False, 'message': 'Todos os campos são obrigatórios'})
     
     try:
@@ -26,8 +27,8 @@ def criar_campeonato():
                 return jsonify({'success': False, 'message': 'Ja tem um campeonato com este nome'})
             
             cursor.execute(f"""
-                INSERT INTO campeonatos (id_usuario, nome, url_logo, id_esporte, data_inicio, data_fim) 
-                VALUES ('{session['user_id']}', '{nome}', '{url_logo}', (SELECT id_esporte FROM esportes WHERE nome = '{esporte}'), '{data_inicio}', '{data_fim}');
+                INSERT INTO campeonatos (id_usuario, nome, descricao, url_logo, id_esporte, data_inicio, data_fim) 
+                VALUES ('{session['user_id']}', '{nome}', '{descricao}', '{url_logo}', (SELECT id_esporte FROM esportes WHERE nome = '{esporte}'), '{data_inicio}', '{data_fim}');
             """)
             criar_campeonato_connection.commit()
             
