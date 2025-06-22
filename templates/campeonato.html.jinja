@@ -33,6 +33,9 @@
                     <img class="campeonato-logo" alt="{{ partida.time_a_nome }}" src="{{ partida.time_a_url_logo }}"/>
                 </td>
                 <td align="center">
+                    {% if campeonato.usuario_nome == usuario.nome %}
+                    <button id="deletar_partida_button_{{ partida.id_partida }}" class="close-button close_modals_button"><b>&times;</b></button>
+                    {% endif %}
                     <div>
                         Rodada: {{ partida.rodada }}
                         —
@@ -73,6 +76,9 @@
                     <img class="campeonato-logo" src="{{ time.url_logo }}"/>
                 </td>
                 <td>
+                    {% if campeonato.usuario_nome == usuario.nome %}
+                    <button id="deletar_time_button_{{ time.id_time }}" class="close-button close_modals_button"><b>&times;</b></button>
+                    {% endif %}
                     <p><b>{{ time.nome }}</b></p>
                     <p>Pontuação: {{ time.pontuacao_total }}</p>
                 </td>
@@ -105,7 +111,28 @@
             </tr>
         </table>
         <form>
-            // TODO
+            <label for="rodada">Rodada:</label>
+            <input type="number" id="rodada" name="rodada" min="0" autofocus required>
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+            <label for="hora">Horario:</label>
+            <input type="time" id="hora" name="hora" required>
+            <label for="time_a">Time A:</label>
+            <select id="time_a" name="time_a">
+                {% for time in times %}
+                <option>{{ time.nome }}</option>
+                {% endfor %}
+            </select>
+            <label for="placar_time_a">Placar - Time A:</label>
+            <input type="number" id="placar_time_a" name="placar_time_a" min="0" required>
+            <label for="time_b">Time B:</label>
+            <select id="time_b" name="time_b">
+                {% for time in times %}
+                <option>{{ time.nome }}</option>
+                {% endfor %}
+            </select>
+            <label for="placar_time_b">Placar - Time B:</label>
+            <input type="number" id="placar_time_b" name="placar_time_b" min="0" required>
         </form>
         <br><br>
         <button class="button" id="criar_partida_button">Proceder</button>
@@ -120,7 +147,10 @@
             </tr>
         </table>
         <form>
-            // TODO
+            <label for="nome">Nome Oficial:</label>
+            <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
+            <label for="url_logo">Logo (URL):</label>
+            <input type="url" id="url_logo" name="url_logo" maxlength="255">
         </form>
         <br><br>
         <button class="button" id="criar_time_button">Proceder</button>

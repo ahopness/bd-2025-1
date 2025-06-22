@@ -1,6 +1,5 @@
 {% if usuario %}
-var button_conta_sair = document.getElementById("sair_conta_button");
-button_conta_sair.onclick = function() {
+document.getElementById("sair_conta_button").onclick = function() {
     fetch('/conta_sair', {
         method: 'POST'
     })
@@ -12,10 +11,10 @@ button_conta_sair.onclick = function() {
     });
 }
 
-var button_conta_deletar = document.getElementById("deletar_conta_button");
-button_conta_deletar.onclick = function() {
-    if (!window.confirm("Tem certeza que quer deletar sua conta?\nTodos os seu campeonantos tambem serão deletados.\nEssa ação não tem volta."))
+document.getElementById("deletar_conta_button").onclick = function() {
+    if (!window.confirm("Tem certeza que quer deletar sua conta?\nTodos os seu campeonantos tambem serão deletados.\nEssa ação não tem volta.")) {
         return;
+    }
 
     fetch('/conta_deletar', {
         method: 'DELETE'
@@ -28,8 +27,7 @@ button_conta_deletar.onclick = function() {
     });
 }
 
-var button_user_dropdown = document.getElementById("user_dropdown_button");
-button_user_dropdown.onclick = function() {
+document.getElementById("user_dropdown_button").onclick = function() {
     var dropdown_usuario = document.getElementById("dropdown_usuario");
     if (dropdown_usuario.style.display == "block") {
         dropdown_usuario.style.display = "none";
@@ -37,7 +35,9 @@ button_user_dropdown.onclick = function() {
         dropdown_usuario.style.display = "block";
     }
 }
+
 {% else %}
+
 var modal_login = document.getElementById("login_modal");
 var modal_signin = document.getElementById("signin_modal");
 
@@ -65,8 +65,7 @@ for (var i = 0; i < button_modals_close.length; i++) {
     }
 }
 
-var button_action_login = document.getElementById("action_login_button");
-button_action_login.onclick = function() {
+document.getElementById("action_login_button").onclick = function() {
     var email = document.querySelector('#login_modal input[name="email"]').value;
     var senha = document.querySelector('#login_modal input[name="senha"]').value;
     
@@ -91,8 +90,7 @@ button_action_login.onclick = function() {
     });
 }
 
-var button_action_signin = document.getElementById("action_signin_button");
-button_action_signin.onclick = function() {
+document.getElementById("action_signin_button").onclick = function() {
     var nome = document.querySelector('#signin_modal input[name="nome"]').value;
     var email = document.querySelector('#signin_modal input[name="email"]').value;
     var senha = document.querySelector('#signin_modal input[name="senha"]').value;

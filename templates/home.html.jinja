@@ -14,6 +14,9 @@
                     <img class="campeonato-logo" src="{{ campeonato.url_logo }}"/>
                 </td>
                 <td>
+                    {% if campeonato.id_usuario == usuario.id_usuario %}
+                    <button id="deletar_campeonato_button_{{ campeonato.id_campeonato }}" class="close-button close_modals_button"><b>&times;</b></button>
+                    {% endif %}
                     <p style="margin: 4px;"><b>{{ campeonato.nome }}</b></p>
                     <p style="margin: 4px; font-size: 10pt;">{{ campeonato.andamento }}</p>
                 </td>
@@ -50,7 +53,7 @@
             <label for="esporte">Esporte:</label>
             <select id="esporte" name="esporte">
                 {% for esporte in esportes %}
-                <option value="{{ esporte.nome }}">{{ esporte.nome }}</option>
+                <option>{{ esporte.nome }}</option>
                 {% endfor %}
             </select>
             <label for="data_inicio">Data de Iníco:</label>

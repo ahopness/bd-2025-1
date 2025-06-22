@@ -102,11 +102,11 @@ CREATE TABLE IF NOT EXISTS partidas (
         ON UPDATE CASCADE,
     FOREIGN KEY (id_time_a) 
         REFERENCES times(id_time)
-        ON DELETE RESTRICT 
+        ON DELETE CASCADE 
         ON UPDATE CASCADE,
     FOREIGN KEY (id_time_b) 
         REFERENCES times(id_time)
-        ON DELETE RESTRICT 
+        ON DELETE CASCADE 
         ON UPDATE CASCADE
 );
 

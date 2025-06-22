@@ -25,6 +25,7 @@ def home_get():
             cursor.execute("""
                 SELECT
                     id_campeonato,
+                    id_usuario,
                     nome,
                     url_logo,
                     CASE
@@ -97,6 +98,7 @@ def campeonato_get():
             
             cursor.execute(f"""
                 SELECT
+                    partidas.id_partida,
                     partidas.rodada,
                     partidas.data_hora,
                     time_a.nome AS time_a_nome,
@@ -117,6 +119,7 @@ def campeonato_get():
 
             cursor.execute(f"""
                 SELECT
+                    times.id_time,
                     times.nome, 
                     times.url_logo,
                     COALESCE(pontuacao_time_a.total_a, 0) + COALESCE(pontuacao_time_b.total_b, 0) as pontuacao_total

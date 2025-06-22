@@ -6,7 +6,7 @@ from app import app
 import pymysql
 from config import *
 
-@app.post('/campeonato_criar')
+@app.post('/campeonato')
 def campeonato_criar():
     nome = request.form.get('nome')
     descricao = request.form.get('descricao')
@@ -49,3 +49,23 @@ def campeonato_criar():
     finally:
         if criar_campeonato_connection.open:
             criar_campeonato_connection.close()
+
+@app.delete('/campeonato')
+def campeonato_deletar():
+    id_campeonato = request.form.get('id_campeonato')
+
+    try:
+        campeonato_deletar_connection = pymysql.connect(**DB_CONFIG)
+        with campeonato_deletar_connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            cursor.execute(f"""
+                DELETE FROM campeonatos
+                WHERE id_campeonato = '{escape(id_campeonato)}';
+            """)
+            campeonato_deletar_connection.commit()
+
+            return jsonify({'success': True, 'message': 'Campeonato deletado com sucesso'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Erro interno: {str(e)}'})
+    finally:
+        if campeonato_deletar_connection.open:
+            campeonato_deletar_connection.close()
