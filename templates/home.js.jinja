@@ -1,8 +1,9 @@
-// BOTÕES DE CAMPEONATOS
+{% macro script_campeonato_buttons() %}
 {% for campeonato in campeonatos %}
 document.getElementById("{{ campeonato.id_campeonato }}").onclick = function() {
 
     {% if campeonato.id_usuario == usuario.id_usuario %}
+
     if (document.getElementById("deletar_campeonato_button_{{ campeonato.id_campeonato }}").matches(':hover')) {
         if (!window.confirm("Tem certeza que quer deletar seu campeonato?.\nEssa ação não tem volta.")) {
             return;
@@ -29,25 +30,15 @@ document.getElementById("{{ campeonato.id_campeonato }}").onclick = function() {
         
         return;
     }
+
     {% endif %}
 
     window.location.replace("/campeonato?id={{ campeonato.id_campeonato }}");
 }
-
 {% endfor %}
+{% endmacro %}
 
-{% if usuario %}
-// CAMPEONATO MODAL
-var modal_campeonato_criar = document.getElementById("criar_campeonato_modal");
-
-document.getElementById("add_campeonato_modal_button").onclick = function() {
-    modal_campeonato_criar.style.display = "block";
-}
-
-document.getElementById("close_add_campeonato_modal_button").onclick = function() {
-    modal_campeonato_criar.style.display = "none";
-}
-
+{% macro script_criar_campeonato_modal() %}
 document.getElementById("criar_campeonato_button").onclick = function() {
     var nome = document.querySelector('#criar_campeonato_modal input[name="nome"]').value;
     var descricao = document.querySelector('#criar_campeonato_modal textarea[name="descricao"]').value;
@@ -80,4 +71,4 @@ document.getElementById("criar_campeonato_button").onclick = function() {
         alert('Erro de conexão: ' + error);
     });
 }
-{% endif %}
+{% endmacro %}

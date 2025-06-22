@@ -5,13 +5,9 @@ app = Flask(__name__)
 app.secret_key = 'segredo'
 
 import pymysql
+
 from config import *
 from utils import *
-
-from contas import *
-from campeonatos import *
-from times import *
-from partidas import *
 
 @app.get('/')
 def home_get():
@@ -161,6 +157,11 @@ def campeonato_get():
     finally:
         if campeonato_connection.open:
             campeonato_connection.close()
+
+from contas import *
+from campeonatos import *
+from times import *
+from partidas import *
 
 if __name__ == '__main__':
     app.run(debug=True)

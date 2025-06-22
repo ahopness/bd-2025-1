@@ -1,10 +1,14 @@
 {% extends "base.html.jinja" %}
-{% block script %} {% include "home.js.jinja" %} {% endblock %}
+
+{% from 'components/modal.html.jinja' import modal %}
+{% from "home.js.jinja" import script_campeonato_buttons, script_criar_campeonato_modal with context  %}
 
 {% block title %}Início{% endblock %}
 
 {% block content %}
+
 <h2>Campeonatos</h2>
+
 <div class="double-item-list">
     {% for campeonato in campeonatos %}
     <button class="campeonato-item" id="{{ campeonato.id_campeonato }}">
@@ -25,24 +29,19 @@
     </button>
     {% endfor %}
 
+    <script>
+        {{ script_campeonato_buttons() }}
+    </script>
+
     {% if usuario %}
-    <button class="campeonato-item add-button" id="add_campeonato_modal_button">
+    <button class="campeonato-item add-button" onclick="open_criar_campeonato_modal()">
         <p style="margin: 4px;"><b>Criar novo campeonato.</b></p>
         <p style="margin: 4px;"><img src="/static/add.svg"/></p>
     </button>
-    {% endif %}
-</div>
-{% endblock %}
 
-{% block modals %}
-<div class="modal" id="criar_campeonato_modal">
-    <div class="modal-content">
-        <table>
-            <tr>
-                <td><h3>Criar Novo Campeonato</h3></td>
-                <td><button class="close-button" id="close_add_campeonato_modal_button"><b>&times;<b></button></td>
-            </tr>
-        </table>
+    {% call modal(
+        'criar_campeonato_modal', 'Criar Novo Campeonato'
+    ) %}
         <form>
             <label for="nome">Nome Oficial:</label>
             <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
@@ -61,8 +60,17 @@
             <label for="data_fim">Data de Fim:</label>
             <input type="date" id="data_fim" name="data_fim" required>
         </form>
+
         <br><br>
-        <button class="button" id="criar_campeonato_button">Proceder</button>
-    </div>
+        <div class="modal-actions">
+            <button class="button" id="criar_campeonato_button">Proceder</button>
+        </div>
+
+        <script>
+            {{ script_criar_campeonato_modal() }}
+        </script>
+    {% endcall %}
+    {% endif %}
 </div>
+
 {% endblock %}

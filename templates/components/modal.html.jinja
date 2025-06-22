@@ -1,0 +1,24 @@
+{% macro modal(modal_id='', modal_title='', modal_actions='') -%}
+
+<div class="modal" id="{{ modal_id }}">
+    <div class="modal-content">
+        <table>
+                <tr>
+                    <td><h3>{{ modal_title }}</h3></td>
+                    <td><button class="close-button" id="close_modal_{{ modal_id }}_button"><b>&times;<b></button></td>
+                </tr>
+            </table>
+            {{ caller() }}
+    </div>
+    <script>
+        function open_{{ modal_id }}() {
+            document.getElementById("{{ modal_id }}").style.display = "block";
+        }
+
+        document.getElementById("close_modal_{{ modal_id }}_button").onclick = function() {
+            document.getElementById("{{ modal_id }}").style.display = "none";
+        }
+    </script>
+</div>
+
+{%- endmacro %}

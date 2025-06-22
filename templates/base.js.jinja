@@ -1,4 +1,14 @@
-{% if usuario %}
+{% macro script_gestao_conta() %}
+
+document.getElementById("user_dropdown_button").onclick = function() {
+    var dropdown_usuario = document.getElementById("dropdown_usuario");
+    if (dropdown_usuario.style.display == "block") {
+        dropdown_usuario.style.display = "none";
+    } else {
+        dropdown_usuario.style.display = "block";
+    }
+}
+
 document.getElementById("sair_conta_button").onclick = function() {
     fetch('/conta_sair', {
         method: 'POST'
@@ -27,43 +37,9 @@ document.getElementById("deletar_conta_button").onclick = function() {
     });
 }
 
-document.getElementById("user_dropdown_button").onclick = function() {
-    var dropdown_usuario = document.getElementById("dropdown_usuario");
-    if (dropdown_usuario.style.display == "block") {
-        dropdown_usuario.style.display = "none";
-    } else {
-        dropdown_usuario.style.display = "block";
-    }
-}
+{% endmacro %}
 
-{% else %}
-
-var modal_login = document.getElementById("login_modal");
-var modal_signin = document.getElementById("signin_modal");
-
-var button_user_login = document.getElementsByClassName("user_login_button");
-for (var i = 0; i < button_user_login.length; i++) {
-    button_user_login[i].onclick = function() {
-        modal_login.style.display = "block";
-        modal_signin.style.display = "none";
-    }
-}
-
-var button_user_signin = document.getElementsByClassName("user_signin_button");
-for (var i = 0; i < button_user_signin.length; i++) {
-    button_user_signin[i].onclick = function() {
-        modal_login.style.display = "none";
-        modal_signin.style.display = "block";
-    }
-}
-
-var button_modals_close = document.getElementsByClassName("close_modals_button");
-for (var i = 0; i < button_modals_close.length; i++) {
-    button_modals_close[i].onclick = function() {
-        modal_login.style.display = "none";
-        modal_signin.style.display = "none";
-    }
-}
+{% macro script_login_modal() %}
 
 document.getElementById("action_login_button").onclick = function() {
     var email = document.querySelector('#login_modal input[name="email"]').value;
@@ -89,6 +65,15 @@ document.getElementById("action_login_button").onclick = function() {
         alert('Erro de conexão: ' + error);
     });
 }
+
+document.getElementById("to_signin_button").onclick = function() {
+    document.getElementById("login_modal").style.display = "none";
+    document.getElementById("signin_modal").style.display = "block";
+}
+
+{% endmacro %}
+
+{% macro script_signin_modal() %}
 
 document.getElementById("action_signin_button").onclick = function() {
     var nome = document.querySelector('#signin_modal input[name="nome"]').value;
@@ -116,4 +101,10 @@ document.getElementById("action_signin_button").onclick = function() {
         alert('Erro de conexão: ' + error);
     });
 }
-{% endif %}
+
+document.getElementById("to_login_button").onclick = function() {
+    document.getElementById("login_modal").style.display = "block";
+    document.getElementById("signin_modal").style.display = "none";
+}
+
+{% endmacro %}

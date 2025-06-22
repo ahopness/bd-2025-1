@@ -1,5 +1,7 @@
 {% extends "base.html.jinja" %}
-{% block script %} {% include "campeonato.js.jinja" %} {% endblock %}
+
+{% from 'components/modal.html.jinja' import modal %}
+{% from "campeonato.js.jinja" import script_criar_partida_modal, script_deletar_partidas, script_criar_time_modal, script_deletar_times with context  %}
 
 {% block title %}{{ campeonato.nome }}{% endblock %}
 
@@ -24,7 +26,9 @@
             </td>
         </tr>
     </table>
+
     <h2>Partidas</h2>
+
     <div class="single-item-list">
         {% for partida in partidas %}
         <table class="partida-item">
@@ -55,18 +59,60 @@
         </table>
         {% endfor %}
 
+        <script>
+            {{ script_deletar_partidas() }}
+        </script>
+
         {% if not partidas %}
         <p style="text-align: center; width: 100%;">Vazio...</p>
         {% endif %}
 
         {% if campeonato.usuario_nome == usuario.nome %}
-        <button class="partida-item add-button dashboard-button" style="height: 100px; margin-top: 0px;" id="add_partida_modal_button">
+        <button class="partida-item add-button dashboard-button" style="height: 100px; margin-top: 0px;" onclick="open_criar_partida_modal()">
             <p style="margin: 4px;"><b>Registrar nova partida.</b></p>
             <p style="margin: 4px;"><img src="/static/add.svg"/></p>
         </button>
+        
+        {% call modal(
+            'criar_partida_modal', 'Registrar Nova Partida'
+        ) %}
+            <form>
+                <label for="rodada">Rodada:</label>
+                <input type="number" id="rodada" name="rodada" min="0" autofocus required>
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+                <label for="hora">Horario:</label>
+                <input type="time" id="hora" name="hora" required>
+                <label for="time_a">Time A:</label>
+                <select id="time_a" name="time_a">
+                    {% for time in times %}
+                    <option>{{ time.nome }}</option>
+                    {% endfor %}
+                </select>
+                <label for="placar_time_a">Placar - Time A:</label>
+                <input type="number" id="placar_time_a" name="placar_time_a" min="0" required>
+                <label for="time_b">Time B:</label>
+                <select id="time_b" name="time_b">
+                    {% for time in times %}
+                    <option>{{ time.nome }}</option>
+                    {% endfor %}
+                </select>
+                <label for="placar_time_b">Placar - Time B:</label>
+                <input type="number" id="placar_time_b" name="placar_time_b" min="0" required>
+            </form>
+
+            <br><br>
+            <button class="button" id="criar_partida_button">Proceder</button>
+
+            <script>
+                {{ script_criar_partida_modal() }}
+            </script>
+        {% endcall %}
         {% endif %}
     </div>
+
     <h2>Times</h2>
+
     <div class="double-item-list">
         {% for time in times %}
         <div class="time-item">
@@ -87,74 +133,37 @@
         </div>
         {% endfor %}
         
+        <script>
+            {{ script_deletar_times() }}
+        </script>
+        
         {% if not times %}
         <p style="text-align: center; width: 100%;">Vazio...</p>
         {% endif %}
 
         {% if campeonato.usuario_nome == usuario.nome %}
-        <button class="partida-item add-button dashboard-button" id="add_time_modal_button">
+        <button class="partida-item add-button dashboard-button" onclick="open_criar_time_modal()">
             <p><b>Cadastrar novo time.</b></p>
             <p><img src="/static/add.svg"/></p>
         </button>
+
+        {% call modal(
+            'criar_time_modal', 'Cadastrar Novo Time'
+        ) %}
+            <form>
+                <label for="nome">Nome Oficial:</label>
+                <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
+                <label for="url_logo">Logo (URL):</label>
+                <input type="url" id="url_logo" name="url_logo" maxlength="255">
+            </form>
+
+            <br><br>
+            <button class="button" id="criar_time_button">Proceder</button>
+
+            <script>
+                {{ script_criar_time_modal() }}
+            </script>
+        {% endcall %}
         {% endif %}
     </div>
-{% endblock %}
-
-{% block modals %}
-{% if campeonato.usuario_nome == usuario.nome %}
-<div class="modal" id="criar_partida_modal">
-    <div class="modal-content">
-        <table>
-            <tr>
-                <td><h3>Registrar Nova Partida</h3></td>
-                <td><button class="close-button" id="close_add_partida_modal_button"><b>&times;<b></button></td>
-            </tr>
-        </table>
-        <form>
-            <label for="rodada">Rodada:</label>
-            <input type="number" id="rodada" name="rodada" min="0" autofocus required>
-            <label for="data">Data:</label>
-            <input type="date" id="data" name="data" required>
-            <label for="hora">Horario:</label>
-            <input type="time" id="hora" name="hora" required>
-            <label for="time_a">Time A:</label>
-            <select id="time_a" name="time_a">
-                {% for time in times %}
-                <option>{{ time.nome }}</option>
-                {% endfor %}
-            </select>
-            <label for="placar_time_a">Placar - Time A:</label>
-            <input type="number" id="placar_time_a" name="placar_time_a" min="0" required>
-            <label for="time_b">Time B:</label>
-            <select id="time_b" name="time_b">
-                {% for time in times %}
-                <option>{{ time.nome }}</option>
-                {% endfor %}
-            </select>
-            <label for="placar_time_b">Placar - Time B:</label>
-            <input type="number" id="placar_time_b" name="placar_time_b" min="0" required>
-        </form>
-        <br><br>
-        <button class="button" id="criar_partida_button">Proceder</button>
-    </div>
-</div>
-<div class="modal" id="criar_time_modal">
-    <div class="modal-content">
-        <table>
-            <tr>
-                <td><h3>Cadastrar Novo Time</h3></td>
-                <td><button class="close-button" id="close_add_time_modal_button"><b>&times;<b></button></td>
-            </tr>
-        </table>
-        <form>
-            <label for="nome">Nome Oficial:</label>
-            <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
-            <label for="url_logo">Logo (URL):</label>
-            <input type="url" id="url_logo" name="url_logo" maxlength="255">
-        </form>
-        <br><br>
-        <button class="button" id="criar_time_button">Proceder</button>
-    </div>
-</div>
-{% endif %}
 {% endblock %}

@@ -1,16 +1,4 @@
-{% if campeonato.usuario_nome == usuario.nome %}
-
-// PARTIDA MODAL
-var modal_criar_partida = document.getElementById("criar_partida_modal");
-
-document.getElementById("add_partida_modal_button").onclick = function() {
-    modal_criar_partida.style.display = "block";
-}
-
-document.getElementById("close_add_partida_modal_button").onclick = function() {
-    modal_criar_partida.style.display = "none";
-}
-
+{% macro script_criar_partida_modal() %}
 document.getElementById("criar_partida_button").onclick = function() {
     var id_campeonato = '{{ campeonato.id_campeonato }}';
     var rodada = document.querySelector('#criar_partida_modal input[name="rodada"]').value;
@@ -46,7 +34,9 @@ document.getElementById("criar_partida_button").onclick = function() {
         alert('Erro de conexão: ' + error)
     });
 }
+{% endmacro %}
 
+{% macro script_deletar_partidas() %}
 {% if campeonato.usuario_nome == usuario.nome %}
 {% for partida in partidas %}
 document.getElementById("deletar_partida_button_{{ partida.id_partida }}").onclick = function() {
@@ -75,18 +65,9 @@ document.getElementById("deletar_partida_button_{{ partida.id_partida }}").oncli
 }
 {% endfor %}
 {% endif %}
+{% endmacro %}
 
-// TIME MODAL
-var modal_criar_time = document.getElementById("criar_time_modal");
-
-document.getElementById("add_time_modal_button").onclick = function() {
-    modal_criar_time.style.display = "block";
-}
-
-document.getElementById("close_add_time_modal_button").onclick = function() {
-    modal_criar_time.style.display = "none";
-}
-
+{% macro script_criar_time_modal() %}
 document.getElementById("criar_time_button").onclick = function() {
     var id_campeonato = '{{ campeonato.id_campeonato }}';
     var nome = document.querySelector('#criar_time_modal input[name="nome"]').value;
@@ -113,7 +94,9 @@ document.getElementById("criar_time_button").onclick = function() {
         alert('Erro de conexão: ' + error)
     });
 }
+{% endmacro %}
 
+{% macro script_deletar_times() %}
 {% if campeonato.usuario_nome == usuario.nome %}
 {% for time in times %}
 document.getElementById("deletar_time_button_{{ time.id_time }}").onclick = function() {
@@ -142,5 +125,4 @@ document.getElementById("deletar_time_button_{{ time.id_time }}").onclick = func
 }
 {% endfor %}
 {% endif %}
-
-{% endif %}
+{% endmacro %}

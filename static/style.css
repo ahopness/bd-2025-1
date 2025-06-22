@@ -139,12 +139,18 @@ textarea:focus, select:focus {
     background-color: var(--context-color);
 
     padding: var(--default-padding);
+    text-align: left;
     
     width: 500px;
     position: relative;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+.modal-actions {
+    display: flex;
+    flex-direction: row;
+    gap: var(--default-padding);
 }
 
 .single-item-list {
@@ -231,6 +237,8 @@ textarea:focus, select:focus {
 .campeonato-item, .time-item {
     width: 266px;
     height: 110px;
+    
+    text-align: left;
 }
 .campeonato-item {
     background-color: var(--button-color);
