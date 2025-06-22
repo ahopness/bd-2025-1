@@ -7,7 +7,7 @@ import pymysql
 from config import *
 
 @app.post('/conta_entrar')
-def conta_entrar_post():
+def conta_entrar():
     email = request.form.get('email')
     senha = request.form.get('senha')
     
@@ -39,7 +39,7 @@ def conta_entrar_post():
             conta_entrar_connection.close()
 
 @app.post('/conta_cadastrar')
-def conta_cadastrar_post():
+def conta_cadastrar():
     nome = request.form.get('nome')
     email = request.form.get('email')
     senha = request.form.get('senha')
@@ -78,12 +78,12 @@ def conta_cadastrar_post():
             conta_cadastrar_connection.close()
 
 @app.post('/conta_sair')
-def conta_sair_post():
+def conta_sair():
     session.clear()
     return redirect(url_for('home_get'))
 
-@app.post('/conta_deletar')
-def conta_deletar_post():
+@app.delete('/conta_deletar')
+def conta_deletar():
     try:
         conta_deletar_connection = pymysql.connect(**DB_CONFIG)
         with conta_deletar_connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -96,9 +96,12 @@ def conta_deletar_post():
             session.clear()
 
             return jsonify({'success': True, 'message': 'Conta deletada com sucesso'})
-        
     except Exception as e:
         return jsonify({'success': False, 'message': f'Erro interno: {str(e)}'})
     finally:
         if conta_deletar_connection.open:
             conta_deletar_connection.close()
+
+@app.put('/conta_atualizar')
+def conta_atualizar():
+    pass # TODO

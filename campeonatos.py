@@ -7,7 +7,7 @@ import pymysql
 from config import *
 
 @app.post('/campeonato_criar')
-def campeonato_criar_post():
+def campeonato_criar():
     nome = request.form.get('nome')
     descricao = request.form.get('descricao')
     url_logo = request.form.get('url_logo')

@@ -7,5 +7,5 @@ import pymysql
 from config import *
 
 @app.post('/time_criar')
-def time_criar_post():
+def time_criar():
     pass

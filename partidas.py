@@ -7,5 +7,5 @@ import pymysql
 from config import *
 
 @app.post('/partida_criar')
-def partida_criar_post():
+def partida_criar():
     pass

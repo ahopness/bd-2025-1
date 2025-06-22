@@ -1,5 +1,8 @@
 {% extends "base.html.jinja" %}
+{% block script %} {% include "campeonato.js.jinja" %} {% endblock %}
+
 {% block title %}{{ campeonato.nome }}{% endblock %}
+
 {% block content %}
     <table style="margin-left: 12px; margin-right: 12px;">
         <tr>
@@ -22,62 +25,75 @@
         </tr>
     </table>
     <h2>Partidas</h2>
-    {% for partida in partidas %}
-    <table class="partida-item">
-        <tr>
-            <td align="left">
-                <img class="campeonato-logo" alt="{{ partida.time_a_nome }}" src="{{ partida.time_a_url_logo }}"/>
-            </td>
-            <td align="center">
-                <div>
-                    Rodada: {{ partida.rodada }}
-                    —
-                    {{ partida.data_hora }}
-                    <br>
-                    <h3 style="margin-top: 0px;">
-                    {{ partida.time_a_placar }}
-                    X
-                    {{ partida.time_b_placar }}
-                    </h3>
-                </div>
-            </td>
-            <td align="right">
-                <img class="campeonato-logo" alt="{{ partida.time_b_nome }}" src="{{ partida.time_b_url_logo }}"/>
-            </td>
-        </tr>
-    </table>
-    {% endfor %}
-    {% if campeonato.usuario_nome == usuario.nome %}
-    <button class="partida-item add-button dashboard-button" style="height: 100px; margin-top: 0px;" id="add_partida_modal_button">
-        <p style="margin: 4px;"><b>Registrar nova partida.</b></p>
-        <p style="margin: 4px;"><img src="/static/add.svg"/></p>
-    </button>
-    {% endif %}
+    <div class="single-item-list">
+        {% for partida in partidas %}
+        <table class="partida-item">
+            <tr>
+                <td align="left">
+                    <img class="campeonato-logo" alt="{{ partida.time_a_nome }}" src="{{ partida.time_a_url_logo }}"/>
+                </td>
+                <td align="center">
+                    <div>
+                        Rodada: {{ partida.rodada }}
+                        —
+                        {{ partida.data_hora }}
+                        <br>
+                        <h3 style="margin-top: 0px;">
+                        {{ partida.time_a_placar }}
+                        X
+                        {{ partida.time_b_placar }}
+                        </h3>
+                    </div>
+                </td>
+                <td align="right">
+                    <img class="campeonato-logo" alt="{{ partida.time_b_nome }}" src="{{ partida.time_b_url_logo }}"/>
+                </td>
+            </tr>
+        </table>
+        {% endfor %}
+
+        {% if not partidas %}
+        <p style="text-align: center; width: 100%;">Vazio...</p>
+        {% endif %}
+
+        {% if campeonato.usuario_nome == usuario.nome %}
+        <button class="partida-item add-button dashboard-button" style="height: 100px; margin-top: 0px;" id="add_partida_modal_button">
+            <p style="margin: 4px;"><b>Registrar nova partida.</b></p>
+            <p style="margin: 4px;"><img src="/static/add.svg"/></p>
+        </button>
+        {% endif %}
+    </div>
     <h2>Times</h2>
-    <div class="item-list" style="margin-bottom: -12px;">
+    <div class="double-item-list">
         {% for time in times %}
         <div class="time-item">
-        <table style="height: 100%;">
+        <table>
             <tr>
                 <td>
                     <img class="campeonato-logo" src="{{ time.url_logo }}"/>
                 </td>
                 <td>
-                    <p style="margin: 4px;"><b>{{ time.nome }}</b></p>
-                    <p style="margin: 4px;">Pontuação: {{ time.pontuacao_total }}</p>
+                    <p><b>{{ time.nome }}</b></p>
+                    <p>Pontuação: {{ time.pontuacao_total }}</p>
                 </td>
             </tr>
         </table>
         </div>
         {% endfor %}
+        
+        {% if not times %}
+        <p style="text-align: center; width: 100%;">Vazio...</p>
+        {% endif %}
+
+        {% if campeonato.usuario_nome == usuario.nome %}
+        <button class="partida-item add-button dashboard-button" id="add_time_modal_button">
+            <p><b>Cadastrar novo time.</b></p>
+            <p><img src="/static/add.svg"/></p>
+        </button>
+        {% endif %}
     </div>
-    {% if campeonato.usuario_nome == usuario.nome %}
-    <button class="partida-item add-button dashboard-button" style="height: 100px; margin-bottom: -12px;" id="add_time_modal_button">
-        <p style="margin: 4px;"><b>Cadastrar novo time.</b></p>
-        <p style="margin: 4px;"><img src="/static/add.svg"/></p>
-    </button>
-    {% endif %}
 {% endblock %}
+
 {% block modals %}
 {% if campeonato.usuario_nome == usuario.nome %}
 <div class="modal" id="criar_partida_modal">
@@ -111,47 +127,4 @@
     </div>
 </div>
 {% endif %}
-{% endblock %}
-{% block script %}
-<script>
-    {% if campeonato.usuario_nome == usuario.nome %}
-    // PARTIDA MODAL
-
-    var modal_criar_partida = document.getElementById("criar_partida_modal");
-
-    var button_add_partida_modal = document.getElementById("add_partida_modal_button");
-    button_add_partida_modal.onclick = function() {
-        modal_criar_partida.style.display = "block";
-    }
-
-    var button_close_add_partida_modal = document.getElementById("close_add_partida_modal_button");
-    button_close_add_partida_modal.onclick = function() {
-        modal_criar_partida.style.display = "none";
-    }
-
-    var button_criar_partida = document.getElementById("criar_partida_button");
-    button_criar_partida.onclick = function() {
-        // TODO
-    }
-
-    // TIME MODAL
-
-    var modal_criar_time = document.getElementById("criar_time_modal");
-
-    var button_add_time_modal = document.getElementById("add_time_modal_button");
-    button_add_time_modal.onclick = function() {
-        modal_criar_time.style.display = "block";
-    }
-
-    var button_close_add_time_modal = document.getElementById("close_add_time_modal_button");
-    button_close_add_time_modal.onclick = function() {
-        modal_criar_time.style.display = "none";
-    }
-
-    var button_criar_time = document.getElementById("criar_time_button");
-    button_criar_time.onclick = function() {
-        // TODO
-    }
-    {% endif %}
-</script>
 {% endblock %}

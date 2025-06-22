@@ -1,0 +1,121 @@
+{% if usuario %}
+var button_conta_sair = document.getElementById("sair_conta_button");
+button_conta_sair.onclick = function() {
+    fetch('/conta_sair', {
+        method: 'POST'
+    })
+    .then(response => {
+        location.reload();
+    })
+    .catch(error => {
+        alert('Erro ao sair da conta: ' + error);
+    });
+}
+
+var button_conta_deletar = document.getElementById("deletar_conta_button");
+button_conta_deletar.onclick = function() {
+    if (!window.confirm("Tem certeza que quer deletar sua conta?\nTodos os seu campeonantos tambem serão deletados.\nEssa ação não tem volta."))
+        return;
+
+    fetch('/conta_deletar', {
+        method: 'DELETE'
+    })
+    .then(response => {
+        location.reload();
+    })
+    .catch(error => {
+        alert('Erro ao deletar conta: ' + error);
+    });
+}
+
+var button_user_dropdown = document.getElementById("user_dropdown_button");
+button_user_dropdown.onclick = function() {
+    var dropdown_usuario = document.getElementById("dropdown_usuario");
+    if (dropdown_usuario.style.display == "block") {
+        dropdown_usuario.style.display = "none";
+    } else {
+        dropdown_usuario.style.display = "block";
+    }
+}
+{% else %}
+var modal_login = document.getElementById("login_modal");
+var modal_signin = document.getElementById("signin_modal");
+
+var button_user_login = document.getElementsByClassName("user_login_button");
+for (var i = 0; i < button_user_login.length; i++) {
+    button_user_login[i].onclick = function() {
+        modal_login.style.display = "block";
+        modal_signin.style.display = "none";
+    }
+}
+
+var button_user_signin = document.getElementsByClassName("user_signin_button");
+for (var i = 0; i < button_user_signin.length; i++) {
+    button_user_signin[i].onclick = function() {
+        modal_login.style.display = "none";
+        modal_signin.style.display = "block";
+    }
+}
+
+var button_modals_close = document.getElementsByClassName("close_modals_button");
+for (var i = 0; i < button_modals_close.length; i++) {
+    button_modals_close[i].onclick = function() {
+        modal_login.style.display = "none";
+        modal_signin.style.display = "none";
+    }
+}
+
+var button_action_login = document.getElementById("action_login_button");
+button_action_login.onclick = function() {
+    var email = document.querySelector('#login_modal input[name="email"]').value;
+    var senha = document.querySelector('#login_modal input[name="senha"]').value;
+    
+    var formData = new FormData();
+    formData.append('email', email);
+    formData.append('senha', senha);
+    
+    fetch('/conta_entrar', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro de conexão: ' + error);
+    });
+}
+
+var button_action_signin = document.getElementById("action_signin_button");
+button_action_signin.onclick = function() {
+    var nome = document.querySelector('#signin_modal input[name="nome"]').value;
+    var email = document.querySelector('#signin_modal input[name="email"]').value;
+    var senha = document.querySelector('#signin_modal input[name="senha"]').value;
+    
+    var formData = new FormData();
+    formData.append('nome', nome);
+    formData.append('email', email);
+    formData.append('senha', senha);
+    
+    fetch('/conta_cadastrar', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro de conexão: ' + error);
+    });
+}
+{% endif %}

@@ -1,0 +1,56 @@
+// BOTÕES DE CAMPEONATOS
+{% for campeonato in campeonatos %}
+var button_{{ campeonato.id_campeonato }} = document.getElementById("{{ campeonato.id_campeonato }}");
+button_{{ campeonato.id_campeonato }}.onclick = function() {
+    window.location.replace("/campeonato?id={{ campeonato.id_campeonato }}");
+}
+{% endfor %}
+
+{% if usuario %}
+// CAMPEONATO MODAL
+var modal_campeonato_criar = document.getElementById("criar_campeonato_modal");
+
+var button_add_campeonato_model = document.getElementById("add_campeonato_modal_button");
+button_add_campeonato_model.onclick = function() {
+    modal_campeonato_criar.style.display = "block";
+}
+
+var button_campeonato_criar_model_close = document.getElementById("close_add_campeonato_modal_button");
+button_campeonato_criar_model_close.onclick = function() {
+    modal_campeonato_criar.style.display = "none";
+}
+
+var button_criar_campeonato = document.getElementById("criar_campeonato_button");
+button_criar_campeonato.onclick = function() {
+    var nome = document.querySelector('#criar_campeonato_modal input[name="nome"]').value;
+    var descricao = document.querySelector('#criar_campeonato_modal textarea[name="descricao"]').value;
+    var url_logo = document.querySelector('#criar_campeonato_modal input[name="url_logo"]').value;
+    var esporte = document.querySelector('#criar_campeonato_modal select[name="esporte"]').value;
+    var data_inicio = document.querySelector('#criar_campeonato_modal input[name="data_inicio"]').value;
+    var data_fim = document.querySelector('#criar_campeonato_modal input[name="data_fim"]').value;
+
+    var formData = new FormData();
+    formData.append('nome', nome);
+    formData.append('descricao', descricao);
+    formData.append('url_logo', url_logo);
+    formData.append('esporte', esporte);
+    formData.append('data_inicio', data_inicio);
+    formData.append('data_fim', data_fim);
+
+    fetch('/campeonato_criar', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro de conexão: ' + error);
+    });
+}
+{% endif %}

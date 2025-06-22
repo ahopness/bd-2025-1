@@ -20,7 +20,6 @@ body {
 
     margin: 0 auto;
     max-width: 650px;
-    min-height: 100vh;
 
     background-color: var(--background-color);
     background-repeat: repeat;
@@ -32,7 +31,7 @@ body {
     line-height:1.6;
 }
 
-h1,h2,h3{
+h1,h2,h3 {
     line-height:1.2;
 }
 
@@ -49,6 +48,7 @@ a:hover, a:active {
 
 table {
     width: 100%;
+    height: 100%;
 }
 
 input, textarea, select {
@@ -61,8 +61,7 @@ input[type=email],
 input[type=password], 
 input[type=url],
 input[type=date],
-textarea,
-select {
+textarea, select {
     background-color: var(--background-color);
     height: 24px;
 
@@ -78,8 +77,7 @@ input[type=email]:focus,
 input[type=password]:focus, 
 input[type=url]:focus,
 input[type=date]:focus,
-textarea:focus,
-select:focus {
+textarea:focus, select:focus {
     border-width: var(--border-width);
 }
 
@@ -89,14 +87,10 @@ select:focus {
 }
 .site-content {
     background-color: var(--context-color);
-    border-radius: var(--corner-radius);
-    border-style: solid;
 
     flex: 1;
     margin: 32px;
-    padding-left: var(--default-padding);
-    padding-right: var(--default-padding);
-    padding-bottom: 24px;
+    padding: var(--default-padding);
 }
 
 .dropdown-content {
@@ -104,19 +98,16 @@ select:focus {
     margin-top: var(--default-padding);
 
     background-color: var(--background-color);
-    border-radius: var(--corner-radius);
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
 
     min-width: 160px;
     z-index: 1;
 }
 .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
     display: block;
+    padding: 12px 16px;
+
+    color: black;
+    text-decoration: none;
     transition-duration: var(--anim-time);
 }
 .dropdown-content a:hover {
@@ -142,9 +133,6 @@ select:focus {
 }
 .modal-content {
     background-color: var(--context-color);
-    border-radius: var(--corner-radius);
-    border-style: solid;
-    border-width: var(--border-width);
 
     padding: var(--default-padding);
     
@@ -155,47 +143,66 @@ select:focus {
     transform: translate(-50%, -50%);
 }
 
-.button {
+.single-item-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--default-padding);
+}
+.double-item-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--default-padding);
+    justify-content: space-between;
+}
+
+.campeonato-logo, .campeonato-logo-grande {
+    height: 64px; 
+
+    padding: 8px;
+    
+    background-color: white;
+}
+.campeonato-logo-grande {
+    height: 128px;
+}
+
+.site-content, 
+.dropdown-content, 
+.modal-content, 
+.button, .alt-button, .close-button, 
+.campeonato-logo, .campeonato-logo-grande,
+.campeonato-item, .time-item, .partida-item{
+    border-color: var(--border-color);
+    border-width: var(--border-width);
+    border-radius: var(--corner-radius);
+    border-style: solid;
+}
+
+.alt-button, .campeonato-item, .dashboard-button {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.button, .alt-button, .close-button, .dashboard-button, .campeonato-item {
+    transition-duration: var(--anim-time);
+}
+
+.button, .alt-button, .campeonato-item, .time-item, .partida-item, .add-button {
+    color: white;
+}
+
+.button, .alt-button {
     padding: var(--button-padding);
 
-    color: white;
     background-color: var(--button-color);
-    transition-duration: var(--anim-time);
-
-    text-decoration: none;
-    cursor: pointer;
 
     display: inline-flex;
     align-items: center;
-
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
-    border-radius: var(--corner-radius);
 }
-.button:hover {
-    background-color: var(--hover-button-color);
-}
-
 .alt-button {
-    padding: var(--button-padding);
-
-    color: white;
     background-color: var(--alt-button-color);
-    transition-duration: var(--anim-time);
-
-    text-decoration: none;
-    cursor: pointer;
-
-    display: inline-flex;
-    align-items: center;
-
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
-    border-radius: var(--corner-radius);
 }
-.alt-button:hover {
+.button:hover, .alt-button:hover, .campeonato-item:hover, .dashboard-button:hover {
     background-color: var(--hover-button-color);
 }
 
@@ -207,113 +214,38 @@ select:focus {
 
     color: red;
     background-color: var(--background-color);
-    transition-duration: var(--anim-time);
 
     font-size: 14pt;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
-
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
-    border-radius: var(--corner-radius);
 }
 .close-button:hover {
     color : black;
 }
 
-.item-list {
-    column-count: 2;
-    text-align: center;
-    margin: 0 auto;
-}
-
-.campeonato-item {
-    margin: 6px;
-    padding: 8px;
-
-    width: 260px;
+.campeonato-item, .time-item {
+    width: 266px;
     height: 110px;
-
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
-    border-radius: var(--corner-radius);
-
-    text-decoration: none;
-    cursor: pointer;
-    
+}
+.campeonato-item {
     background-color: var(--button-color);
-    color: white;
-    transition-duration: var(--anim-time);
 }
-.campeonato-item:hover {
-    background-color: var(--hover-button-color);
-}
-
-.campeonato-logo {
-    height: 64px; 
-    padding: 8px;
-    
-    background-color: white;
-    
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
-    border-radius: var(--corner-radius);
-}
-.campeonato-logo-grande {
-    height: 128px;
-
-    padding: 8px;
-    
-    background-color: white;
-    
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
-    border-radius: var(--corner-radius);
-}
-
 .time-item {
-    margin-bottom: 12px;
-    padding: 8px;
-    height: 120px;
-
     background-color: var(--hover-button-color);
-    color: white;
-
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
-    border-radius: var(--corner-radius);
+}
+.time-item p {
+    margin: 0px;
+    margin-left: 4px;
 }
 
 .partida-item {
     height: 100px;
     width: 100%;
 
-    margin-top: var(--default-padding);
-    margin-bottom: var(--default-padding);
     padding: 8px;
 
-    border-style: solid;
-    border-color: var(--border-color);
-    border-width: var(--border-width);
-    border-radius: var(--corner-radius);
-
     background-color: var(--button-color);
-    color: white;
-}
-
-.dashboard-button {
-    text-decoration: none;
-    cursor: pointer;
-    transition-duration: var(--anim-time);
-}
-.dashboard-button:hover {
-    background-color: var(--hover-button-color);
 }
 
 .add-button {
@@ -321,5 +253,4 @@ select:focus {
     align-content: center;
 
     background-color: var(--alt-button-color);
-    color: white;
 }

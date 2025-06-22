@@ -1,0 +1,38 @@
+{% if campeonato.usuario_nome == usuario.nome %}
+
+// PARTIDA MODAL
+var modal_criar_partida = document.getElementById("criar_partida_modal");
+
+var button_add_partida_modal = document.getElementById("add_partida_modal_button");
+button_add_partida_modal.onclick = function() {
+    modal_criar_partida.style.display = "block";
+}
+
+var button_close_add_partida_modal = document.getElementById("close_add_partida_modal_button");
+button_close_add_partida_modal.onclick = function() {
+    modal_criar_partida.style.display = "none";
+}
+
+var button_criar_partida = document.getElementById("criar_partida_button");
+button_criar_partida.onclick = function() {
+    // TODO
+}
+
+// TIME MODAL
+var modal_criar_time = document.getElementById("criar_time_modal");
+
+var button_add_time_modal = document.getElementById("add_time_modal_button");
+button_add_time_modal.onclick = function() {
+    modal_criar_time.style.display = "block";
+}
+
+var button_close_add_time_modal = document.getElementById("close_add_time_modal_button");
+button_close_add_time_modal.onclick = function() {
+    modal_criar_time.style.display = "none";
+}
+
+var button_criar_time = document.getElementById("criar_time_button");
+button_criar_time.onclick = function() {
+    // TODO
+}
+{% endif %}
