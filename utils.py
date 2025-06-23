@@ -90,9 +90,10 @@ CREATE TABLE IF NOT EXISTS partidas (
     id_partida INT NOT NULL AUTO_INCREMENT,
     id_campeonato INT NOT NULL,
     rodada INT NOT NULL,
-    data_hora DATETIME NULL,
-    id_time_a INT NULL,
-    id_time_b INT NULL,
+    data DATE NOT NULL,
+    hora TIME NOT NULL,
+    id_time_a INT NOT NULL,
+    id_time_b INT NOT NULL,
     placar_time_a INT NULL,
     placar_time_b INT NULL,
     PRIMARY KEY (id_partida),
@@ -119,6 +120,7 @@ VALUES
 
 INSERT INTO esportes (nome)
 VALUES
+('Poliesportivo'),
 ('Futebol'), 
 ('Vôlei'), 
 ('Tênis'), 
@@ -136,10 +138,10 @@ VALUES
 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/2025_FIFA_Club_World_Cup.svg/200px-2025_FIFA_Club_World_Cup.svg.png',
 (SELECT id_esporte FROM esportes WHERE nome = 'Futebol'), '2025-06-14', '2025-07-13'),
 
-('Campeonato Mundial de Hóquei no Gelo Ed. 86', (SELECT id_usuario FROM usuarios WHERE nome = 'Sicrano de Tal'),
+('Junfri - Jogos Universitários Friburgenses 2025', (SELECT id_usuario FROM usuarios WHERE nome = 'Sicrano de Tal'),
 'Torneio anual disputado pelas melhores seleções de hóquei no gelo. O torneio é organizado pela Federação Internacional de Hóquei no Gelo.',
-'https://upload.wikimedia.org/wikipedia/en/thumb/9/96/2025_IIHF_World_Championship_logo.png/250px-2025_IIHF_World_Championship_logo.png',
-(SELECT id_esporte FROM esportes WHERE nome = 'Hóquei'), '2025-05-09', '2025-05-25');
+'https://scontent-gig4-1.cdninstagram.com/v/t51.2885-19/440708689_398767556358202_6561516942382112192_n.jpg',
+(SELECT id_esporte FROM esportes WHERE nome = 'Poliesportivo'), '2025-05-09', '2025-05-25');
 
 INSERT INTO times (nome, id_campeonato, url_logo)
 VALUES
@@ -156,20 +158,20 @@ VALUES
 ('Espérance Sportive de Tunis', (SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'),
 'https://upload.wikimedia.org/wikipedia/pt/thumb/4/49/Esp%C3%A9rance_Sportive_de_Tunis.png/250px-Esp%C3%A9rance_Sportive_de_Tunis.png');
 
-INSERT INTO partidas (id_campeonato, rodada, data_hora, id_time_a, id_time_b, placar_time_a, placar_time_b)
+INSERT INTO partidas (id_campeonato, rodada, data, hora, id_time_a, id_time_b, placar_time_a, placar_time_b)
 VALUES
 ((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'), 
-'1', '2025-06-15 19:00:00', 
+'1', '2025-06-15', '19:00:00', 
 (SELECT id_time FROM times WHERE nome = 'Sociedade Esportiva Palmeiras'), (SELECT id_time FROM times WHERE nome = 'Futebol Clube do Porto'), 
 '0', '0'),
 
 ((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'), 
-'1', '2025-06-15 23:00:00', 
+'1', '2025-06-15', '23:00:00', 
 (SELECT id_time FROM times WHERE nome = 'Botafogo de Futebol e Regatas'), (SELECT id_time FROM times WHERE nome = 'Seattle Sounders Football Club'), 
 '2', '1'),
 
 ((SELECT id_campeonato FROM campeonatos WHERE nome = 'Copa do Mundo de Clubes da FIFA 2025'), 
-'2', '2025-06-16 22:00:00', 
+'2', '2025-06-16', '22:00:00', 
 (SELECT id_time FROM times WHERE nome = 'Clube de Regatas do Flamengo'), (SELECT id_time FROM times WHERE nome = 'Espérance Sportive de Tunis'), 
 '2', '0');
 """

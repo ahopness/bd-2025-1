@@ -1,37 +1,34 @@
 {% extends "base.html.jinja" %}
-
-{% from 'components/modal.html.jinja' import modal %}
-{% from "home.js.jinja" import script_campeonato_buttons, script_criar_campeonato_modal with context  %}
+{% from 'components/campeonato_modals.html.jinja' import criar_campeonato_modal with context %}
 
 {% block title %}Início{% endblock %}
 
 {% block content %}
-
 <h2>Campeonatos</h2>
 
 <div class="double-item-list">
     {% for campeonato in campeonatos %}
     <button class="campeonato-item" id="{{ campeonato.id_campeonato }}">
-        <table>
-            <tr>
-                <td>
-                    <img class="campeonato-logo" src="{{ campeonato.url_logo }}"/>
-                </td>
-                <td>
-                    {% if campeonato.id_usuario == usuario.id_usuario %}
-                    <button id="deletar_campeonato_button_{{ campeonato.id_campeonato }}" class="close-button close_modals_button"><b>&times;</b></button>
-                    {% endif %}
-                    <p style="margin: 4px;"><b>{{ campeonato.nome }}</b></p>
-                    <p style="margin: 4px; font-size: 10pt;">{{ campeonato.andamento }}</p>
-                </td>
-            </tr>
-        </table>
+    <table>
+        <tr>
+            <td class="shrink-td">
+                <img class="marca-logo" src="{{ campeonato.url_logo }}"/>
+            </td>
+            <td>
+                <p><b>{{ campeonato.nome }}</b></p>
+                <p style="font-size: 10pt;">{{ campeonato.andamento }}</p>
+            </td>
+        </tr>
+    </table>
     </button>
-    {% endfor %}
 
     <script>
-        {{ script_campeonato_buttons() }}
+        document.getElementById("{{ campeonato.id_campeonato }}").onclick = function() {
+            window.location.replace("/campeonato?id={{ campeonato.id_campeonato }}");
+        }
     </script>
+    {% endfor %}
+
 
     {% if usuario %}
     <button class="campeonato-item add-button" onclick="open_criar_campeonato_modal()">
@@ -39,38 +36,7 @@
         <p style="margin: 4px;"><img src="/static/add.svg"/></p>
     </button>
 
-    {% call modal(
-        'criar_campeonato_modal', 'Criar Novo Campeonato'
-    ) %}
-        <form>
-            <label for="nome">Nome Oficial:</label>
-            <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
-            <label for="descricao">Descrição e Regras:</label>
-            <textarea id="descricao" name="descricao" maxlength="500" style="height:70px;"></textarea>
-            <label for="url_logo">Logo (URL):</label>
-            <input type="url" id="url_logo" name="url_logo" maxlength="255">
-            <label for="esporte">Esporte:</label>
-            <select id="esporte" name="esporte">
-                {% for esporte in esportes %}
-                <option>{{ esporte.nome }}</option>
-                {% endfor %}
-            </select>
-            <label for="data_inicio">Data de Iníco:</label>
-            <input type="date" id="data_inicio" name="data_inicio" required>
-            <label for="data_fim">Data de Fim:</label>
-            <input type="date" id="data_fim" name="data_fim" required>
-        </form>
-
-        <br><br>
-        <div class="modal-actions">
-            <button class="button" id="criar_campeonato_button">Proceder</button>
-        </div>
-
-        <script>
-            {{ script_criar_campeonato_modal() }}
-        </script>
-    {% endcall %}
+    {{ criar_campeonato_modal() }}
     {% endif %}
 </div>
-
 {% endblock %}

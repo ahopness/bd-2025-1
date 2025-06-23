@@ -1,11 +1,15 @@
-{% macro modal(modal_id='', modal_title='', modal_actions='') -%}
+{% macro modal(modal_id='', modal_title='', modal_actions='') %}
 
 <div class="modal" id="{{ modal_id }}">
     <div class="modal-content">
         <table>
                 <tr>
-                    <td><h3>{{ modal_title }}</h3></td>
-                    <td><button class="close-button" id="close_modal_{{ modal_id }}_button"><b>&times;<b></button></td>
+                    <td>
+                        <h3>{{ modal_title }}</h3>
+                    </td>
+                    <td>
+                        <button class="close-button" id="close_modal_{{ modal_id }}_button"><img src="/static/close.svg" /></button>
+                    </td>
                 </tr>
             </table>
             {{ caller() }}
@@ -21,4 +25,4 @@
     </script>
 </div>
 
-{%- endmacro %}
+{% endmacro %}

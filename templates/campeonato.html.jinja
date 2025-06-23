@@ -1,169 +1,137 @@
 {% extends "base.html.jinja" %}
 
-{% from 'components/modal.html.jinja' import modal %}
-{% from "campeonato.js.jinja" import script_criar_partida_modal, script_deletar_partidas, script_criar_time_modal, script_deletar_times with context  %}
+{% from 'components/campeonato_modals.html.jinja' import deletar_campeonato_script, editar_campeonato_modal with context %}
+{% from 'components/partida_modals.html.jinja' import criar_partida_modal, deletar_partidas_script, editar_partida_modal with context %}
+{% from 'components/time_modals.html.jinja' import criar_time_modal, deletar_times_script, editar_time_modal with context %}
 
 {% block title %}{{ campeonato.nome }}{% endblock %}
 
 {% block content %}
-    <table style="margin-left: 12px; margin-right: 12px;">
+<table style="margin-left: 12px; margin-right: 12px;">
+    <tr>
+        <td>
+            <img class="marca-logo-grande" src="{{ campeonato.url_logo }}"/>
+        </td>
+        <td>
+            <h2 style="margin: 12px;">
+                {{ campeonato.nome }}
+            </h2>
+            {% if campeonato.usuario_nome == usuario.nome %}
+            <div style="margin-left: 12px;">
+                <button id="deletar_campeonato_button" class="close-button" style="float: none;"><img src="/static/delete.svg" /></button>
+                {{ deletar_campeonato_script() }}
+                <button onclick="open_editar_campeonato_modal()" class="edit-button" style="float: none;"><img src="/static/edit.svg" /></button>
+                {{ editar_campeonato_modal() }}
+            </div>
+            {% endif %}
+            <p style="margin: 12px;">
+                {{ campeonato.descricao }}
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center; font-size: 10pt;">
+            <span>{{ campeonato.esporte_nome }}</span>
+            —
+            <span>Administrado por: <a href="mailto:{{ campeonato.usuario_email }}">{{ campeonato.usuario_nome }}</a></span>
+            —
+            <span>Início: <span class="special-text">{{ campeonato.data_inicio }}</span></span>
+            —
+            <span>Fim: <span class="special-text">{{ campeonato.data_fim }}</span></span>
+        </td>
+    </tr>
+</table>
+
+<h2>Partidas</h2>
+
+<div class="single-item-list">
+    {% for partida in partidas %}
+    <table class="partida-item">
         <tr>
-            <td>
-                <img class="campeonato-logo-grande" src="{{ campeonato.url_logo }}"/>
+            <td align="left" class="shrink-td">
+                <img class="marca-logo" alt="{{ partida.time_a_nome }}" src="{{ partida.time_a_url_logo }}"/>
             </td>
-            <td>
-                <h2 style="margin: 12px;">{{ campeonato.nome }}</h2>
-                <p style="margin: 12px;">{{ campeonato.descricao }}</p>
+            <td align="center">
+                <div>
+                    <p style="font-size: 10pt; margin-top: 2px;">
+                        Rodada: <b>{{ partida.rodada }}</b>
+                        —
+                        {{ partida.data }} {{ partida.hora }}
+                    </p>
+                    <h3 style="margin-top: 0px; margin-bottom: 8px;">
+                        {{ partida.time_a_placar if partida.time_a_placar is not none else '-' }}
+                        X
+                        {{ partida.time_b_placar if partida.time_b_placar is not none else '-' }}
+                    </h3>
+                    {% if campeonato.usuario_nome == usuario.nome %}
+                    <div>
+                        <button id="deletar_partida_button_{{ partida.id_partida }}" class="close-button" style="float: none;"><img src="/static/delete.svg" /></button>
+                        <button onclick="open_editar_partida_modal_{{ partida.id_partida }}()" class="edit-button" style="float: none;"><img src="/static/edit.svg" /></button>
+                    </div>
+                    {% endif %}
+                </div>
             </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="text-align: center; font-size: 10pt;">
-                <span>Administrado por: <a href="mailto:{{ campeonato.usuario_email }}">{{ campeonato.usuario_nome }}</a></span>
-                —
-                <span>Início: <span class="special-text">{{ campeonato.data_inicio }}</span></span>
-                —
-                <span>Fim: <span class="special-text">{{ campeonato.data_fim }}</span></span>
+            <td align="right" class="shrink-td">
+                <img class="marca-logo" alt="{{ partida.time_b_nome }}" src="{{ partida.time_b_url_logo }}"/>
             </td>
         </tr>
     </table>
+    {{ editar_partida_modal( partida.id_partida, partida.rodada, partida.data, partida.hora, partida.time_a_nome, partida.time_a_placar, partida.time_b_nome, partida.time_b_placar ) }}
+    {% endfor %}
+    {{ deletar_partidas_script() }}
 
-    <h2>Partidas</h2>
+    {% if not partidas %}
+    <p style="text-align: center; width: 100%;">Vazio...</p>
+    {% endif %}
 
-    <div class="single-item-list">
-        {% for partida in partidas %}
-        <table class="partida-item">
-            <tr>
-                <td align="left">
-                    <img class="campeonato-logo" alt="{{ partida.time_a_nome }}" src="{{ partida.time_a_url_logo }}"/>
-                </td>
-                <td align="center">
-                    {% if campeonato.usuario_nome == usuario.nome %}
-                    <button id="deletar_partida_button_{{ partida.id_partida }}" class="close-button close_modals_button"><b>&times;</b></button>
-                    {% endif %}
-                    <div>
-                        Rodada: {{ partida.rodada }}
-                        —
-                        {{ partida.data_hora }}
-                        <br>
-                        <h3 style="margin-top: 0px;">
-                        {{ partida.time_a_placar }}
-                        X
-                        {{ partida.time_b_placar }}
-                        </h3>
-                    </div>
-                </td>
-                <td align="right">
-                    <img class="campeonato-logo" alt="{{ partida.time_b_nome }}" src="{{ partida.time_b_url_logo }}"/>
-                </td>
-            </tr>
-        </table>
-        {% endfor %}
+    {% if campeonato.usuario_nome == usuario.nome %}
+    <button class="partida-item add-button dashboard-button" style="height: 100px; margin-top: 0px;" onclick="open_criar_partida_modal()">
+        <p style="margin: 4px;"><b>Registrar nova partida.</b></p>
+        <p style="margin: 4px;"><img src="/static/add.svg"/></p>
+    </button>
+    {{ criar_partida_modal() }}
+    {% endif %}
+</div>
 
-        <script>
-            {{ script_deletar_partidas() }}
-        </script>
+<h2>Times</h2>
 
-        {% if not partidas %}
-        <p style="text-align: center; width: 100%;">Vazio...</p>
-        {% endif %}
-
-        {% if campeonato.usuario_nome == usuario.nome %}
-        <button class="partida-item add-button dashboard-button" style="height: 100px; margin-top: 0px;" onclick="open_criar_partida_modal()">
-            <p style="margin: 4px;"><b>Registrar nova partida.</b></p>
-            <p style="margin: 4px;"><img src="/static/add.svg"/></p>
-        </button>
-        
-        {% call modal(
-            'criar_partida_modal', 'Registrar Nova Partida'
-        ) %}
-            <form>
-                <label for="rodada">Rodada:</label>
-                <input type="number" id="rodada" name="rodada" min="0" autofocus required>
-                <label for="data">Data:</label>
-                <input type="date" id="data" name="data" required>
-                <label for="hora">Horario:</label>
-                <input type="time" id="hora" name="hora" required>
-                <label for="time_a">Time A:</label>
-                <select id="time_a" name="time_a">
-                    {% for time in times %}
-                    <option>{{ time.nome }}</option>
-                    {% endfor %}
-                </select>
-                <label for="placar_time_a">Placar - Time A:</label>
-                <input type="number" id="placar_time_a" name="placar_time_a" min="0" required>
-                <label for="time_b">Time B:</label>
-                <select id="time_b" name="time_b">
-                    {% for time in times %}
-                    <option>{{ time.nome }}</option>
-                    {% endfor %}
-                </select>
-                <label for="placar_time_b">Placar - Time B:</label>
-                <input type="number" id="placar_time_b" name="placar_time_b" min="0" required>
-            </form>
-
-            <br><br>
-            <button class="button" id="criar_partida_button">Proceder</button>
-
-            <script>
-                {{ script_criar_partida_modal() }}
-            </script>
-        {% endcall %}
-        {% endif %}
+<div class="double-item-list">
+    {% for time in times %}
+    <div class="time-item" {% if campeonato.usuario_nome == usuario.nome %} style="height: 104px;" {% endif %}>
+    <table>
+        <tr>
+            <td class="shrink-td">
+                <img class="marca-logo" src="{{ time.url_logo }}"/>
+            </td>
+            <td>
+                <p><b>{{ time.nome }}</b></p>
+                <p style="font-size: 10pt;">Pontuação: {{ time.pontuacao_total }}</p>
+            </td>
+            {% if campeonato.usuario_nome == usuario.nome %}
+            <td align="right" class="shrink-td">
+                <div class="single-item-list">
+                    <button id="deletar_time_button_{{ time.id_time }}" class="close-button"><img src="/static/delete.svg" /></button>
+                    <button onclick="open_editar_time_modal_{{ time.id_time }}()" class="edit-button"><img src="/static/edit.svg" /></button>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+    </table>
     </div>
+    {{ editar_time_modal( time.id_time, time.nome, time.url_logo ) }}
+    {% endfor %}
+    {{ deletar_times_script() }}
+    
+    {% if not times %}
+    <p style="text-align: center; width: 100%;">Vazio...</p>
+    {% endif %}
 
-    <h2>Times</h2>
-
-    <div class="double-item-list">
-        {% for time in times %}
-        <div class="time-item">
-        <table>
-            <tr>
-                <td>
-                    <img class="campeonato-logo" src="{{ time.url_logo }}"/>
-                </td>
-                <td>
-                    {% if campeonato.usuario_nome == usuario.nome %}
-                    <button id="deletar_time_button_{{ time.id_time }}" class="close-button close_modals_button"><b>&times;</b></button>
-                    {% endif %}
-                    <p><b>{{ time.nome }}</b></p>
-                    <p>Pontuação: {{ time.pontuacao_total }}</p>
-                </td>
-            </tr>
-        </table>
-        </div>
-        {% endfor %}
-        
-        <script>
-            {{ script_deletar_times() }}
-        </script>
-        
-        {% if not times %}
-        <p style="text-align: center; width: 100%;">Vazio...</p>
-        {% endif %}
-
-        {% if campeonato.usuario_nome == usuario.nome %}
-        <button class="partida-item add-button dashboard-button" onclick="open_criar_time_modal()">
-            <p><b>Cadastrar novo time.</b></p>
-            <p><img src="/static/add.svg"/></p>
-        </button>
-
-        {% call modal(
-            'criar_time_modal', 'Cadastrar Novo Time'
-        ) %}
-            <form>
-                <label for="nome">Nome Oficial:</label>
-                <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
-                <label for="url_logo">Logo (URL):</label>
-                <input type="url" id="url_logo" name="url_logo" maxlength="255">
-            </form>
-
-            <br><br>
-            <button class="button" id="criar_time_button">Proceder</button>
-
-            <script>
-                {{ script_criar_time_modal() }}
-            </script>
-        {% endcall %}
-        {% endif %}
-    </div>
+    {% if campeonato.usuario_nome == usuario.nome %}
+    <button class="partida-item add-button dashboard-button" onclick="open_criar_time_modal()">
+        <p><b>Cadastrar novo time.</b></p>
+        <p><img src="/static/add.svg"/></p>
+    </button>
+    {{ criar_time_modal() }}
+    {% endif %}
+</div>
 {% endblock %}

@@ -1,0 +1,124 @@
+{% from 'components/core/modal.html.jinja' import modal %}
+
+{% macro criar_time_modal() %}
+{% call modal(
+        'criar_time_modal', 'Cadastrar Novo Time'
+) %}
+    <form>
+        <label for="nome">Nome Oficial:</label>
+        <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
+        <label for="url_logo">Logo (URL):</label>
+        <input type="url" id="url_logo" name="url_logo" maxlength="255">
+    </form>
+
+    <br><br>
+    <button class="button" id="criar_time_button">Proceder</button>
+
+    <script>
+        document.getElementById("criar_time_button").onclick = function() {
+        var id_campeonato = '{{ campeonato.id_campeonato }}';
+        var nome = document.querySelector('#criar_time_modal input[name="nome"]').value;
+        var url_logo = document.querySelector('#criar_time_modal input[name="url_logo"]').value;
+
+        var formData = new FormData();
+        formData.append('id_campeonato', id_campeonato);
+        formData.append('nome', nome);
+        formData.append('url_logo', url_logo);
+
+        fetch('/time', {
+            method: 'PUT',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error)
+        });
+    }
+    </script>
+{% endcall %}
+{% endmacro %}
+
+{% macro deletar_times_script() %}
+{% if campeonato.usuario_nome == usuario.nome %}
+<script>
+    {% for time in times %}
+    document.getElementById("deletar_time_button_{{ time.id_time }}").onclick = function() {
+        if (!window.confirm("Tem certeza que quer deletar esse time?.\nTodas as partidas que esse time participou serão deletadas juntas.\nEssa ação não tem volta.")) {
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('id_time', {{ time.id_time }});
+
+        fetch('/time', {
+            method: 'DELETE',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error)
+        });
+    }
+    {% endfor %}
+</script>
+{% endif %}
+{% endmacro %}
+
+{% macro editar_time_modal( id_time, time_nome, time_url_logo ) %}
+{% call modal(
+        'editar_time_modal_'~id_time, 'Editar Time'
+) %}
+    <form>
+        <label for="nome">Nome Oficial:</label>
+        <input type="text" id="nome" name="nome" maxlength="255" autofocus required, value="{{ time_nome }}">
+        <label for="url_logo">Logo (URL):</label>
+        <input type="url" id="url_logo" name="url_logo" maxlength="255" value="{{ time_url_logo }}">
+    </form>
+
+    <br><br>
+    <button class="button" id="editar_time_button_{{ id_time }}">Editar</button>
+
+    <script>
+        document.getElementById("editar_time_button_{{ id_time }}").onclick = function() {
+        var nome = document.querySelector('#editar_time_modal_{{ id_time }} input[name="nome"]').value;
+        var url_logo = document.querySelector('#editar_time_modal_{{ id_time }} input[name="url_logo"]').value;
+
+        var formData = new FormData();
+        formData.append('id_time', {{ id_time }});
+        formData.append('id_campeonato', {{ campeonato.id_campeonato }});
+        formData.append('nome', nome);
+        formData.append('url_logo', url_logo);
+
+        fetch('/time', {
+            method: 'PATCH',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error)
+        });
+    }
+    </script>
+{% endcall %}
+{% endmacro %}

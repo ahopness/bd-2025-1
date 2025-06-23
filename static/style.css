@@ -50,6 +50,9 @@ table {
     width: 100%;
     height: 100%;
 }
+.shrink-td {
+    width: 0px;
+}
 
 input, textarea, select {
     display: block;
@@ -165,22 +168,27 @@ textarea:focus, select:focus {
     justify-content: space-between;
 }
 
-.campeonato-logo, .campeonato-logo-grande {
+.marca-logo, .marca-logo-grande {
     height: 64px; 
+    width: 64px; 
+
+    object-fit: scale-down;
 
     padding: 8px;
+    vertical-align: middle;
     
     background-color: white;
 }
-.campeonato-logo-grande {
+.marca-logo-grande {
     height: 128px;
+    width: 128px; 
 }
 
 .site-content, 
 .dropdown-content, 
 .modal-content, 
-.button, .alt-button, .close-button, 
-.campeonato-logo, .campeonato-logo-grande,
+.button, .alt-button, .close-button, .edit-button, 
+.marca-logo, .marca-logo-grande,
 .campeonato-item, .time-item, .partida-item{
     border-color: var(--border-color);
     border-width: var(--border-width);
@@ -188,12 +196,12 @@ textarea:focus, select:focus {
     border-style: solid;
 }
 
-.button, .alt-button, .campeonato-item, .dashboard-button {
+.button, .alt-button, .close-button, .edit-button, .campeonato-item, .dashboard-button {
     text-decoration: none;
     cursor: pointer;
 }
 
-.button, .alt-button, .close-button, .dashboard-button, .campeonato-item {
+.button, .alt-button, .close-button img, .edit-button img, .campeonato-item, .dashboard-button {
     transition-duration: var(--anim-time);
 }
 
@@ -216,46 +224,54 @@ textarea:focus, select:focus {
     background-color: var(--hover-button-color);
 }
 
-.close-button {
+.close-button, .edit-button {
     float: right;
-    padding: var(--button-padding);
-    width: 44px;
-    height: 44px;
 
-    color: red;
+    padding: var(--button-padding);
+
+    width: 42px;
+    height: 42px;
+
     background-color: var(--background-color);
 
     font-size: 14pt;
     font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
 }
-.close-button:hover {
-    color : black;
+ 
+.close-button img {
+    filter: invert(65%) sepia(40%) saturate(2853%) hue-rotate(337deg) brightness(102%) contrast(97%);
+}
+.edit-button img {
+    filter: invert(42%) sepia(13%) saturate(1357%) hue-rotate(73deg) brightness(110%) contrast(93%);
+}
+.close-button:hover img, .edit-button:hover img {
+    filter: brightness(0%);
 }
 
 .campeonato-item, .time-item {
-    width: 266px;
     height: 110px;
-    
+    padding: 4px;
     text-align: left;
 }
+.campeonato-item p, .time-item p {
+    margin: 0px;
+    margin-left: 6px;
+}
 .campeonato-item {
+    width: 272px;
     background-color: var(--button-color);
 }
 .time-item {
+    width: 258px;
+    height: 92px;
     background-color: var(--hover-button-color);
-}
-.time-item p {
-    margin: 0px;
-    margin-left: 4px;
 }
 
 .partida-item {
     height: 100px;
     width: 100%;
 
-    padding: 8px;
+    padding: 4px 6px;
 
     background-color: var(--button-color);
 }

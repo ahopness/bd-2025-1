@@ -1,0 +1,186 @@
+{% from 'components/core/modal.html.jinja' import modal %}
+
+{% macro criar_partida_modal() %}
+{% call modal(
+    'criar_partida_modal', 'Registrar Nova Partida'
+) %}
+    <form>
+        <label for="rodada">Rodada:</label>
+        <input type="number" id="rodada" name="rodada" min="0" autofocus required>
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" required>
+        <label for="hora">Horario:</label>
+        <input type="time" id="hora" name="hora" required>
+        <label for="time_a">Time A:</label>
+        <select id="time_a" name="time_a">
+            {% for time in times %}
+            <option>{{ time.nome }}</option>
+            {% endfor %}
+        </select>
+        <label for="placar_time_a">Placar - Time A (opcional):</label>
+        <input type="number" id="placar_time_a" name="placar_time_a" min="0" placeholder="Deixe vazio se a partida ainda não aconteceu">
+        <label for="time_b">Time B:</label>
+        <select id="time_b" name="time_b">
+            {% for time in times %}
+            <option>{{ time.nome }}</option>
+            {% endfor %}
+        </select>
+        <label for="placar_time_b">Placar - Time B (opcional):</label>
+        <input type="number" id="placar_time_b" name="placar_time_b" min="0" placeholder="Deixe vazio se a partida ainda não aconteceu">
+    </form>
+
+    <br><br>
+    <button class="button" id="criar_partida_button">Proceder</button>
+
+    <script>
+        document.getElementById("criar_partida_button").onclick = function() {
+        var id_campeonato = '{{ campeonato.id_campeonato }}';
+        var rodada = document.querySelector('#criar_partida_modal input[name="rodada"]').value;
+        var data = document.querySelector('#criar_partida_modal input[name="data"]').value;
+        var hora = document.querySelector('#criar_partida_modal input[name="hora"]').value;
+        var time_a = document.querySelector('#criar_partida_modal select[name="time_a"]').value;
+        var placar_time_a = document.querySelector('#criar_partida_modal input[name="placar_time_a"]').value;
+        var time_b = document.querySelector('#criar_partida_modal select[name="time_b"]').value;
+        var placar_time_b = document.querySelector('#criar_partida_modal input[name="placar_time_b"]').value;
+
+        var formData = new FormData();
+        formData.append('id_campeonato', id_campeonato);
+        formData.append('rodada', rodada);
+        formData.append('data', data);
+        formData.append('hora', hora);
+        formData.append('time_a', time_a);
+        formData.append('placar_time_a', placar_time_a);
+        formData.append('time_b', time_b);
+        formData.append('placar_time_b', placar_time_b);
+
+        fetch('/partida', {
+            method: 'PUT',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error)
+        });
+    }
+    </script>
+{% endcall %}
+{% endmacro %}
+
+{% macro deletar_partidas_script() %}
+{% if campeonato.usuario_nome == usuario.nome %}
+<script>
+    {% for partida in partidas %}
+    document.getElementById("deletar_partida_button_{{ partida.id_partida }}").onclick = function() {
+        if (!window.confirm("Tem certeza que quer deletar essa partida?\nEssa ação não tem volta.")) {
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('id_partida', {{ partida.id_partida }});
+
+        fetch('/partida', {
+            method: 'DELETE',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error)
+        });
+    }
+    {% endfor %}
+</script>
+{% endif %}
+{% endmacro %}
+
+{% macro editar_partida_modal( id_partida, rodada, data, hora, time_a_nome, placar_time_a, time_b_nome, placar_time_b ) %}
+{% call modal(
+    'editar_partida_modal_'~id_partida, 'Editar Partida'
+) %}
+    <form>
+        <label for="rodada">Rodada:</label>
+        <input type="number" id="rodada" name="rodada" min="0" autofocus required value="{{ rodada }}">
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" required value="{{ data }}">
+        <label for="hora">Horario:</label>
+        <input type="time" id="hora" name="hora" required value="{{ hora }}">
+        <label for="time_a">Time A:</label>
+        <select id="time_a" name="time_a">
+            <option>{{ time_a_nome }}</option>
+            {% for time in times %}
+            {% if time.nome != time_a %}
+            <option>{{ time.nome }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+        <label for="placar_time_a">Placar - Time A (opcional):</label>
+        <input type="number" id="placar_time_a" name="placar_time_a" min="0" value="{{ placar_time_a if placar_time_a is not none else '' }}" placeholder="Deixe vazio se a partida ainda não aconteceu">
+        <label for="time_b">Time B:</label>
+        <select id="time_b" name="time_b">
+            <option>{{ time_b_nome }}</option>
+            {% for time in times %}
+            {% if time.nome != time_b_nome %}
+            <option>{{ time.nome }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+        <label for="placar_time_b">Placar - Time B (opcional):</label>
+        <input type="number" id="placar_time_b" name="placar_time_b" min="0" value="{{ placar_time_b if placar_time_b is not none else '' }}" placeholder="Deixe vazio se a partida ainda não aconteceu">
+    </form>
+
+    <br><br>
+    <button class="button" id="editar_partida_button_{{ id_partida }}">Proceder</button>
+
+    <script>
+        document.getElementById("editar_partida_button_{{ id_partida }}").onclick = function() {
+        var rodada = document.querySelector('#editar_partida_modal_{{ id_partida }} input[name="rodada"]').value;
+        var data = document.querySelector('#editar_partida_modal_{{ id_partida }} input[name="data"]').value;
+        var hora = document.querySelector('#editar_partida_modal_{{ id_partida }} input[name="hora"]').value;
+        var time_a = document.querySelector('#editar_partida_modal_{{ id_partida }} select[name="time_a"]').value;
+        var placar_time_a = document.querySelector('#editar_partida_modal_{{ id_partida }} input[name="placar_time_a"]').value;
+        var time_b = document.querySelector('#editar_partida_modal_{{ id_partida }} select[name="time_b"]').value;
+        var placar_time_b = document.querySelector('#editar_partida_modal_{{ id_partida }} input[name="placar_time_b"]').value;
+
+        var formData = new FormData();
+        formData.append('id_campeonato', {{ campeonato.id_campeonato }});
+        formData.append('id_partida', {{ id_partida }})
+        formData.append('rodada', rodada);
+        formData.append('data', data);
+        formData.append('hora', hora);
+        formData.append('time_a', time_a);
+        formData.append('placar_time_a', placar_time_a);
+        formData.append('time_b', time_b);
+        formData.append('placar_time_b', placar_time_b);
+
+        fetch('/partida', {
+            method: 'PATCH',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error)
+        });
+    }
+    </script>
+{% endcall %}
+{% endmacro %}

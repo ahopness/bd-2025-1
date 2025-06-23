@@ -1,0 +1,192 @@
+{% from 'components/core/modal.html.jinja' import modal %}
+
+{% macro login_modal() %}
+{% call modal(
+    'login_modal', 'Log-In'
+) %}
+    <form>
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" name="email" maxlength="255" autofocus required>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" maxlength="255" required>
+    </form>
+
+    <br><br>
+    <div class="modal-actions">
+        <button class="button" id="action_login_button">Entrar</button>
+        <button class="button" id="to_signin_button">Primeira vez aqui?</button>
+    </div>
+
+    <script>
+        document.getElementById("action_login_button").onclick = function() {
+        var email = document.querySelector('#login_modal input[name="email"]').value;
+        var senha = document.querySelector('#login_modal input[name="senha"]').value;
+        
+        var formData = new FormData();
+        formData.append('email', email);
+        formData.append('senha', senha);
+        
+        fetch('/login', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error);
+        });
+    }
+
+    document.getElementById("to_signin_button").onclick = function() {
+        document.getElementById("login_modal").style.display = "none";
+        document.getElementById("signin_modal").style.display = "block";
+    }
+    </script>
+{% endcall %}
+{% endmacro %}
+
+{% macro signin_modal() %}
+{% call modal(
+    'signin_modal', 'Sign-In'
+) %}
+    <form>
+        <label for="nome">Nome/Apelido:</label>
+        <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" name="email" maxlength="255" required>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" maxlength="255" required>
+    </form>
+
+    <br><br>
+    <div class="modal-actions">
+        <button class="button" id="action_signin_button">Cadastrar</button>
+        <button class="button" id="to_login_button">Já possui cadastro?</button>
+    </div>
+
+    <script>
+        document.getElementById("action_signin_button").onclick = function() {
+        var nome = document.querySelector('#signin_modal input[name="nome"]').value;
+        var email = document.querySelector('#signin_modal input[name="email"]').value;
+        var senha = document.querySelector('#signin_modal input[name="senha"]').value;
+        
+        var formData = new FormData();
+        formData.append('nome', nome);
+        formData.append('email', email);
+        formData.append('senha', senha);
+        
+        fetch('/sigin', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error);
+        });
+    }
+
+    document.getElementById("to_login_button").onclick = function() {
+        document.getElementById("login_modal").style.display = "block";
+        document.getElementById("signin_modal").style.display = "none";
+    }
+    </script>
+{% endcall %}
+{% endmacro %}
+
+{% macro alterar_credenciais_modal() %}
+{% call modal(
+    'alterar_credenciais_modal', 'Alterar Credenciais'
+) %}
+    <form>
+        <label for="nome">Nome/Apelido:</label>
+        <input type="text" id="nome" name="nome" maxlength="255" autofocus required value="{{ usuario.nome }}">
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" name="email" maxlength="255" required value="{{ usuario.email }}">
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" maxlength="255" required>
+    </form>
+
+    <br><br>
+    <div class="modal-actions">
+        <button class="button" id="action_signin_button">Alterar</button>
+    </div>
+
+    <script>
+        document.getElementById("action_signin_button").onclick = function() {
+        var nome = document.querySelector('#alterar_credenciais_modal input[name="nome"]').value;
+        var email = document.querySelector('#alterar_credenciais_modal input[name="email"]').value;
+        var senha = document.querySelector('#alterar_credenciais_modal input[name="senha"]').value;
+        
+        var formData = new FormData();
+        formData.append('nome', nome);
+        formData.append('email', email);
+        formData.append('senha', senha);
+        
+        fetch('/conta', {
+            method: 'PATCH',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error);
+        });
+    }
+    </script>
+{% endcall %}
+{% endmacro %}
+
+{% macro sair_conta_script() %}
+<script>
+    document.getElementById("sair_conta_button").onclick = function() {
+        fetch('/logout', {
+            method: 'POST'
+        })
+        .then(response => {
+            location.reload();
+        })
+        .catch(error => {
+            alert('Erro ao sair da conta: ' + error);
+        });
+    }
+</script>
+{% endmacro %}
+
+{% macro deletar_conta_script() %}
+<script>
+    document.getElementById("deletar_conta_button").onclick = function() {
+        if (!window.confirm("Tem certeza que quer deletar sua conta?\nTodos os seu campeonantos tambem serão deletados.\nEssa ação não tem volta.")) {
+            return;
+        }
+
+        fetch('/conta', {
+            method: 'DELETE'
+        })
+        .then(response => {
+            location.reload();
+        })
+        .catch(error => {
+            alert('Erro ao deletar conta: ' + error);
+        });
+    }
+</script>
+{% endmacro %}
