@@ -1,20 +1,15 @@
-from flask import Flask, render_template, session, request
-from markupsafe import escape
-
+from flask import Flask, redirect, render_template, session, request, url_for
 app = Flask(__name__)
-app.secret_key = 'segredo'
 
 import pymysql
-
 from config import *
 from utils import *
 
+from markupsafe import escape
+
 @app.get('/')
 def home_get():
-    try:
-        home_connection = pymysql.connect(**DB_CONFIG)
-    except Exception as e:
-        return "Service Unavailable: {str(e)}", 503
+    home_connection = pymysql.connect(**DB_CONFIG)
 
     with home_connection.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute("""
@@ -163,10 +158,7 @@ def campeonato_get():
                             partidas=partidas,
                             usuario=usuario)
 
-from contas import *
-from campeonatos import *
-from times import *
-from partidas import *
+from api import *
 
 if __name__ == '__main__':
     app.run(debug=True)

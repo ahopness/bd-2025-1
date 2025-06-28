@@ -1,5 +1,6 @@
 from flask import request, session, jsonify
 from markupsafe import escape
+import re
 
 from app import app
 
@@ -21,6 +22,9 @@ def campeonato_criar():
     if not nome or not descricao or not url_logo or not esporte or not data_inicio or not data_fim:
         return jsonify({'success': False, 'message': 'Todos os campos são obrigatórios'})
     
+    if re.match(r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$', url_logo) is None:
+        return jsonify({'success': False, 'message': 'URL invalida'})
+
     try:
         criar_campeonato_connection = pymysql.connect(**DB_CONFIG)
         with criar_campeonato_connection.cursor(pymysql.cursors.DictCursor) as cursor:

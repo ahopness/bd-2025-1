@@ -8,7 +8,7 @@
         <label for="nome">Nome Oficial:</label>
         <input type="text" id="nome" name="nome" maxlength="255" autofocus required>
         <label for="descricao">Descrição e Regras:</label>
-        <textarea id="descricao" name="descricao" maxlength="500" style="height:70px;"></textarea>
+        <textarea id="descricao" name="descricao" maxlength="500" style="height:70px; resize: none;"></textarea>
         <label for="url_logo">Logo (URL):</label>
         <input type="url" id="url_logo" name="url_logo" maxlength="255">
         <label for="esporte">Esporte:</label>
@@ -104,7 +104,7 @@ document.getElementById("deletar_campeonato_button").onclick = function() {
         <label for="nome">Nome Oficial:</label>
         <input type="text" id="nome" name="nome" maxlength="255" autofocus required value="{{ campeonato.nome }}">
         <label for="descricao">Descrição e Regras:</label>
-        <textarea id="descricao" name="descricao" maxlength="500" style="height:70px;">{{ campeonato.descricao }}</textarea>
+        <textarea id="descricao" name="descricao" maxlength="500" style="height:70px; resize: none;">{{ campeonato.descricao }}</textarea>
         <label for="url_logo">Logo (URL):</label>
         <input type="url" id="url_logo" name="url_logo" maxlength="255" value="{{ campeonato.url_logo }}">
         <label for="esporte">Esporte:</label>

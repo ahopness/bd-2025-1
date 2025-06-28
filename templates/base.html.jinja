@@ -1,4 +1,4 @@
-{% from 'components/conta_modals.html.jinja' import login_modal, signin_modal, alterar_credenciais_modal, sair_conta_script, deletar_conta_script with context %}
+{% from 'components/conta_modals.html.jinja' import login_modal, signup_modal, alterar_credenciais_modal, sair_conta_script, deletar_conta_script with context %}
 
 <!DOCTYPE html>
 <html lang="pt">
@@ -54,7 +54,7 @@
                 <span style="margin-left: 4px;">Entar</span>
             </button>  
             {{ login_modal() }}
-            {{ signin_modal() }}
+            {{ signup_modal() }}
 
             {% endif %}
         </div>

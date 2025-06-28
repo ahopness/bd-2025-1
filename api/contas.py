@@ -1,5 +1,6 @@
 from flask import request, session, redirect, url_for, jsonify
 from markupsafe import escape
+import re
 
 from app import app
 
@@ -38,7 +39,7 @@ def conta_entrar():
         if conta_entrar_connection.open:
             conta_entrar_connection.close()
 
-@app.post('/sigin')
+@app.post('/signup')
 def conta_cadastrar():
     nome = request.form.get('nome')
     email = request.form.get('email')
@@ -47,6 +48,9 @@ def conta_cadastrar():
     if not nome or not email or not senha:
         return jsonify({'success': False, 'message': 'Todos os campos são obrigatórios'})
     
+    if re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email) is None:
+        return jsonify({'success': False, 'message': 'E-Mail invalido'})
+
     try:
         conta_cadastrar_connection = pymysql.connect(**DB_CONFIG)
         with conta_cadastrar_connection.cursor(pymysql.cursors.DictCursor) as cursor:

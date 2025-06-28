@@ -139,9 +139,9 @@ VALUES
 (SELECT id_esporte FROM esportes WHERE nome = 'Futebol'), '2025-06-14', '2025-07-13'),
 
 ('Junfri - Jogos Universitários Friburgenses 2025', (SELECT id_usuario FROM usuarios WHERE nome = 'Sicrano de Tal'),
-'Torneio anual disputado pelas melhores seleções de hóquei no gelo. O torneio é organizado pela Federação Internacional de Hóquei no Gelo.',
-'https://scontent-gig4-1.cdninstagram.com/v/t51.2885-19/440708689_398767556358202_6561516942382112192_n.jpg',
-(SELECT id_esporte FROM esportes WHERE nome = 'Poliesportivo'), '2025-05-09', '2025-05-25');
+'Torneio anual poliesportivo disputado entre os estudantes das universidades ao redor do estado do Rio de Janeiro, seja publica ou privada, disputado na cidade de Nova Friburgo.',
+'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSteGIo0IgsFlLLz87VRRfT-EZgyOy5J4_CmQ&s',
+(SELECT id_esporte FROM esportes WHERE nome = 'Poliesportivo'), '2025-07-09', '2025-07-25');
 
 INSERT INTO times (nome, id_campeonato, url_logo)
 VALUES
